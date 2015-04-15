@@ -9,33 +9,33 @@
 import Foundation
 import UIKit
 
-class StudentsListViewController: UITableViewController, StudentLocationManagerDelegate {
+class StudentsListViewController: UITableViewController, StudentInformationManagerDelegate {
     
-    var studentLocationManager: StudentLocationManager!
+    var studentInformationManager: StudentInformationManager!
     
-    var studentLocationList: [StudentLocation]?
+    var studentInformationList: [StudentInformation]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        studentLocationManager = StudentLocationManager.sharedInstance
+        studentInformationManager = StudentInformationManager.sharedInstance
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        studentLocationManager.delegate = self
+        studentInformationManager.delegate = self
         // Update list of students
-        refreshStudentLocations()
+        refreshStudentsInformation()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        studentLocationManager.delegate = nil
+        studentInformationManager.delegate = nil
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("StudentInformationCell") as! UITableViewCell
         
-        let studentLocation = studentLocationList![indexPath.row]
+        let studentLocation = studentInformationList[indexPath.row]
         
         cell.textLabel?.text = studentLocation.title
         cell.detailTextLabel?.text = studentLocation.mediaURL
@@ -45,25 +45,32 @@ class StudentsListViewController: UITableViewController, StudentLocationManagerD
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let existingList = studentLocationList {
+        if let existingList = studentInformationList {
             return existingList.count
         } else {
             return 0
         }
     }
     
-    // MARK: - StudentLocationManagerDelegate
-    
-    func studentLocationsDidFetch() {
-        refreshStudentLocations()
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let studentInformation = studentInformationList[indexPath.row]
+        if !URLUtils.openURL(string: studentInformation.mediaURL) {
+            showMessageWithTitle("Error", message: "Could not open URL: \(studentInformation.mediaURL)")
+        }
     }
     
-    func studentLocationsFetchError(error: NSError) {
+    // MARK: - StudentLocationManagerDelegate
+    
+    func studentsInformationDidFetch() {
+        refreshStudentsInformation()
+    }
+    
+    func studentsInformationFetchError(error: NSError) {
         showMessageWithTitle("Error fetching the student locaitons", message: error.localizedDescription)
     }
     
-    func refreshStudentLocations () {
-        studentLocationList = studentLocationManager.currentStudentLocations
+    func refreshStudentsInformation () {
+        studentInformationList = studentInformationManager.currentStudentsInformation
         tableView.reloadData()
     }
     

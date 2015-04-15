@@ -1,5 +1,5 @@
 //
-//  UIUtils.swift
+//  FoundationExtensions.swift
 //  OnTheMap
 //
 //  Created by Humberto Aquino on 4/12/15.
@@ -7,12 +7,10 @@
 //
 
 import Foundation
-import UIKit
 
-
-
-
-// FIXME: MOve this to a nother file
+// Extending foundation objects can be considered a bad design practice. 
+// However I consider it very elegant practice if used carefully
+// This file should be the only place where the Foundation objects are extended
 
 extension NSObject {
     func performOnMainQueue(callback: () -> Void) {
@@ -28,5 +26,4 @@ extension Dictionary {
         }
     }
 }
-
 

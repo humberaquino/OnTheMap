@@ -27,14 +27,14 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
     
     var mapString: String!
     
-    var studentLocationManager: StudentLocationManager!
+    var studentInformationManager: StudentInformationManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Round corners
         submitButton.layer.cornerRadius = 10;
 
-        studentLocationManager = StudentLocationManager.sharedInstance
+        studentInformationManager = StudentInformationManager.sharedInstance
         
         mapView.delegate = self
         linkToShareTextField.delegate = self
@@ -143,10 +143,10 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
         }
         
         // Update student location with current coordinates
-        var studentLocation = buildStudentLocation()
+        var studentInformation = buildStudentInformation()
       
         // Use the StudentLocationManager to do the submit
-        studentLocationManager.submitStudentLocation(studentLocation, completitionHandler: {
+        studentInformationManager.submitStudentInformation(studentInformation, completitionHandler: {
             (updatedStudentLocation, error) -> Void in
             if let existingError = error {
                 self.showMessageWithTitle("Error submiting location", message: existingError.localizedDescription)
@@ -160,7 +160,7 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
             // StudentLocationManager.sharedInstance.myStudentLocation = studentLocation
             //
             
-            StudentLocationManager.sharedInstance.refreshRequired = true
+            StudentInformationManager.sharedInstance.refreshRequired = true
             self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
@@ -187,19 +187,29 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
         
     }
     
-    func buildStudentLocation() -> StudentLocation {
-        let udacityUser = StudentLocationManager.sharedInstance.udacityUser!
+    func buildStudentInformation() -> StudentInformation {
+        let udacityUser = StudentInformationManager.sharedInstance.udacityUser!
         
         let mediaString = linkToShareTextField.text
         let latitude = coordinates.latitude
         let longitude = coordinates.longitude
         
-        let studentLocation = StudentLocation(uniqueKey: udacityUser.userID, firstName: udacityUser.firstName, lastName: udacityUser.lastName, mapString: mapString, mediaURL: mediaString, latitude: latitude, longitude: longitude)
+        let dictionary: [String: AnyObject] = [
+            "uniqueKey": udacityUser.userID,
+            "firstName": udacityUser.firstName,
+            "lastName": udacityUser.lastName,
+            "mapString": mapString,
+            "mediaURL": mediaString,
+            "latitude": latitude,
+            "longitude": longitude
+        ]
         
-        if let myStudentLocation = StudentLocationManager.sharedInstance.myStudentLocation {
-            studentLocation.objectId = myStudentLocation.objectId
+        let studentInformation = StudentInformation(dictionary: dictionary)
+        
+        if let myStudentInformation = StudentInformationManager.sharedInstance.myStudentInformation {
+            studentInformation.objectId = myStudentInformation.objectId
         }
         
-        return studentLocation
+        return studentInformation
     }
 }

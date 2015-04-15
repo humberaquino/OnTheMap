@@ -52,7 +52,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func signUpAction(sender: UIButton) {
-        if !openURL(string: Constants.signUpURLString) {
+        if !URLUtils.openURL(string: Constants.signUpURLString) {
             showMessageWithTitle("Error", message: "Could not open URL: \(Constants.signUpURLString)")
         }
     }
@@ -91,8 +91,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 self.loginInProgress(false)
             } else {
                 // Success. Show the Map view
-                StudentLocationManager.sharedInstance.udacityUser = udacityUser
-                StudentLocationManager.sharedInstance.refreshRequired = true
+                StudentInformationManager.sharedInstance.udacityUser = udacityUser
+                StudentInformationManager.sharedInstance.refreshRequired = true
                 self.presentMapAndTabView()
             }            
         }

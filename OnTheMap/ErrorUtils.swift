@@ -1,5 +1,5 @@
 //
-//  ErrorMessageSimplifier.swift
+//  ErrorUtils.swift
 //  OnTheMap
 //
 //  Created by Humberto Aquino on 4/14/15.

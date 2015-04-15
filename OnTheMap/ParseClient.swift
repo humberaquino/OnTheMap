@@ -19,9 +19,9 @@ class ParseClient: NSObject {
         super.init()
     }
     
-    func fetchStudentsLocation(fetchComplete: (result: [StudentLocation]?, error: NSError?) -> Void) {
+    func fetchStudentsInformation(fetchComplete: (result: [StudentInformation]?, error: NSError?) -> Void) {
         
-        let parameters = [ "limit" : Constants.MaxStudentLocations ]
+        let parameters = [ "limit" : Constants.MaxStudentsInformation ]
         
         let headers = [
             "X-Parse-Application-Id": Constants.ParseApplicationId,
@@ -41,7 +41,7 @@ class ParseClient: NSObject {
                 
                 // Build StudentLocation array based on the JSON response
                 var buildError: NSError? = nil
-                var studentLocations:[StudentLocation]? = StudentLocation.buildStudentLocationList(resultsArray, error: &buildError)
+                var studentLocations:[StudentInformation]? = StudentInformation.buildStudentInformationList(resultsArray, error: &buildError)
                 
                 if let existingError = buildError {
                     // Error while building the array og StudentLocations. Check the JSON Response and buildStudentLocationList method
@@ -55,7 +55,7 @@ class ParseClient: NSObject {
     }
     
     
-    func createStudentLocation(studentLocation: StudentLocation, completitionHandler: (objectId: String!, error: NSError!) -> Void) {
+    func createStudentInformation(studentLocation: StudentInformation, completitionHandler: (objectId: String!, error: NSError!) -> Void) {
         let headers = [
             "X-Parse-Application-Id": Constants.ParseApplicationId,
             "X-Parse-REST-API-Key": Constants.ParseRestAPIKey
@@ -91,15 +91,15 @@ class ParseClient: NSObject {
 
     }
     
-    func updateStudentLocation(studentLocation: StudentLocation, completitionHandler: (success: Bool, error: NSError!) -> Void) {
+    func updateStudentInformation(studentInformation: StudentInformation, completitionHandler: (success: Bool, error: NSError!) -> Void) {
         let headers = [
             "X-Parse-Application-Id": Constants.ParseApplicationId,
             "X-Parse-REST-API-Key": Constants.ParseRestAPIKey
         ]
         
-        let jsonBody = studentLocation.toJSON()
+        let jsonBody = studentInformation.toJSON()
         
-        let method = "\(Methods.StudentLocation)/\(studentLocation.objectId!)"
+        let method = "\(Methods.StudentLocation)/\(studentInformation.objectId!)"
         
         httpClient.jsonTaskForPUTMethod(Constants.BaseURLSecure, method: method, parameters: nil, headers: headers, body: jsonBody) {
                 (jsonResponse, response, error) -> Void in
@@ -132,7 +132,7 @@ extension ParseClient {
         static let ParseApplicationId = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let ParseRestAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
         
-        static let MaxStudentLocations = 100
+        static let MaxStudentsInformation = 100
     }
     //Parse Application ID = QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr
 //    REST API Key = QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY

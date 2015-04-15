@@ -1,5 +1,5 @@
 //
-//  UIExtentions.swift
+//  UIKitExtensions.swift
 //  OnTheMap
 //
 //  Created by Humberto Aquino on 4/9/15.
@@ -9,8 +9,12 @@
 import Foundation
 import UIKit
 
-extension  UITextField {
-    
+
+// Extending UIKit objects can be considered a bad design practice.
+// However I consider it very elegant practice if used carefully
+// This file should be the only place where the UIKit objects are extended
+
+extension  UITextField {    
     // Utility function to create a left padding for the UITextField text
     func leftPaddingOf(padding: CGFloat) {
         self.layer.sublayerTransform = CATransform3DMakeTranslation(padding, 0, 0);
@@ -36,12 +40,5 @@ extension UIViewController {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    func openURL(string urlString: String) -> Bool {
-        if let url = NSURL(string: urlString) {
-            UIApplication.sharedApplication().openURL(url)
-            return true
-        } else {
-            return false
-        }
-    }
+    
 }

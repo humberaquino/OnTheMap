@@ -1,5 +1,5 @@
 //
-//  StudentLocationManager.swift
+//  StudentInformationManager.swift
 //  OnTheMap
 //
 //  Created by Humberto Aquino on 4/12/15.
@@ -9,84 +9,82 @@
 import Foundation
 
 
-@objc protocol StudentLocationManagerDelegate {
-    func studentLocationsDidFetch()
-    func studentLocationsFetchError(error: NSError)
+@objc protocol StudentInformationManagerDelegate {
+    func studentsInformationDidFetch()
+    func studentsInformationFetchError(error: NSError)
 }
 
-class StudentLocationManager: NSObject {
+class StudentInformationManager: NSObject {
     
     private let parseClient = ParseClient()
-    private var studentLocations: [StudentLocation]!
+    private var studentsInformation: [StudentInformation]!
     
-    var delegate: StudentLocationManagerDelegate?
+    var delegate: StudentInformationManagerDelegate?
     var refreshRequired = false
     
-    var currentStudentLocations: [StudentLocation]? {
-        return studentLocations
+    var currentStudentsInformation: [StudentInformation]? {
+        return studentsInformation
     }
     
     var udacityUser: UdacityUser?
-    var myStudentLocation: StudentLocation?
+    var myStudentInformation: StudentInformation?
     
-    var studentLocationsNotInitialized = true
-    
-    func refreshStudentLocations() {
-        parseClient.fetchStudentsLocation { (newStudentLocationList, error) -> Void in
+    func refreshStudentsInformation() {
+        parseClient.fetchStudentsInformation { (newStudentsInformationList, error) -> Void in
             if let existingError = error {
                 // Error while fetching
                 self.performOnMainQueue {
-                    self.delegate?.studentLocationsFetchError(existingError)
+                    self.delegate?.studentsInformationFetchError(existingError)
                 }
                 return
             }
             
             // Update the current list
-            self.studentLocations = newStudentLocationList!
+            self.studentsInformation = newStudentsInformationList!
             
             // Check if my location is already posted
-            self.initMyStudentLocationIfNecessary()
+            self.initMyStudentInformationIfNecessary()
             
             // Notify about the success
             self.performOnMainQueue {
-                self.delegate?.studentLocationsDidFetch()
+                self.delegate?.studentsInformationDidFetch()
             }
         }
     }
     
     // Search for a student location with my uniqueKey. If exist then sets myStudentLocation to it
-    func initMyStudentLocationIfNecessary() {
-        if myStudentLocation == nil {
-            myStudentLocation = findStudentLocationWithUniqueKey(udacityUser!.userID)
+    func initMyStudentInformationIfNecessary() {
+        if myStudentInformation == nil {
+            myStudentInformation = findStudentInformationWithUniqueKey(udacityUser!.userID)
         }
     }
     
-    func submitStudentLocation(studentLocation: StudentLocation, completitionHandler: (success: Bool, error: NSError!) -> Void) {
+    func submitStudentInformation(studentInformation: StudentInformation, completitionHandler: (success: Bool, error: NSError!) -> Void) {
         
-        if myLocationExists() {
+        if myStudentInformationExists() {
             // Overriding my location and mediaURL
             // TODO: a PUT
-            parseClient.updateStudentLocation(studentLocation) { (success, updateError) in
+            parseClient.updateStudentInformation(studentInformation) { (success, updateError) in
                 // Handle completition
-                self.handleStudentLocationChange(studentLocation, requestError: updateError, completitionHandler: completitionHandler)
+                self.handleStudentInformationChange(studentInformation, requestError: updateError, completitionHandler: completitionHandler)
             }
             
             
         } else {
             // This is the first time I sumbit my location. Do a POST
-            parseClient.createStudentLocation(studentLocation) { (objectId, createError) in
+            parseClient.createStudentInformation(studentInformation) { (objectId, createError) in
                 if objectId != nil {
-                    studentLocation.objectId = objectId
+                    studentInformation.objectId = objectId
                 }
                 // Handle completition
-                self.handleStudentLocationChange(studentLocation, requestError: createError, completitionHandler: completitionHandler)
+                self.handleStudentInformationChange(studentInformation, requestError: createError, completitionHandler: completitionHandler)
                 
             }
         }
     }
     
     // Handler used to check for request errors and do the completition in create and update methods
-    func handleStudentLocationChange(studentLocation: StudentLocation, requestError: NSError!, completitionHandler:(success: Bool, error: NSError!) -> Void) {
+    func handleStudentInformationChange(studentInformation: StudentInformation, requestError: NSError!, completitionHandler:(success: Bool, error: NSError!) -> Void) {
         if let existingError = requestError {
             self.performOnMainQueue {
                 completitionHandler(success: false, error: existingError)
@@ -95,7 +93,7 @@ class StudentLocationManager: NSObject {
         }
         // Success
         // Save the studentLocation with the assigned objectId
-        self.myStudentLocation = studentLocation
+        self.myStudentInformation = studentInformation
         self.performOnMainQueue {
             completitionHandler(success: true, error: nil)
         }
@@ -109,21 +107,21 @@ class StudentLocationManager: NSObject {
             if beforeRefresh != nil {
                 beforeRefresh!()
             }            
-            refreshStudentLocations()
+            refreshStudentsInformation()
         }
     }
     
     
     // Checks if
-    func myLocationExists() -> Bool {
+    func myStudentInformationExists() -> Bool {
         // Quick test
-        if myStudentLocation != nil {
+        if myStudentInformation != nil {
             return true
         }
         
         // No location in this session but perhaps is already in the list
-        if studentLocations != nil && udacityUser != nil {
-            if let studentFound = findStudentLocationWithUniqueKey(udacityUser!.userID) {
+        if myStudentInformation != nil && udacityUser != nil {
+            if let studentFound = findStudentInformationWithUniqueKey(udacityUser!.userID) {
                 return true
             }
         }
@@ -132,25 +130,25 @@ class StudentLocationManager: NSObject {
     
     // MARK: - Utility functions
     
-    func findStudentLocationWithUniqueKey(uniqueKey: String) -> StudentLocation? {
-        for studentLocation in studentLocations {
-            if studentLocation.uniqueKey == uniqueKey {
+    func findStudentInformationWithUniqueKey(uniqueKey: String) -> StudentInformation? {
+        for studentInformation in studentsInformation {
+            if studentInformation.uniqueKey == uniqueKey {
                 // My key is already placed.
-                return studentLocation
+                return studentInformation
             }
         }
         return nil
     }
     
     // Singleton definition
-    class var sharedInstance: StudentLocationManager {
+    class var sharedInstance: StudentInformationManager {
         struct Static {
-            static var instance: StudentLocationManager?
+            static var instance: StudentInformationManager?
             static var token: dispatch_once_t = 0
         }
         
         dispatch_once(&Static.token) {
-            Static.instance = StudentLocationManager()
+            Static.instance = StudentInformationManager()
         }
         
         return Static.instance!

@@ -10,58 +10,55 @@ import Foundation
 import UIKit
 import MapKit
 
-class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLocationManagerDelegate {
+class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentInformationManagerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     let StudentPinIdentifier = "StudentPin"
-    let DefineStudentLocationIdentifier = "DefineStudentLocation"
+    let DefineStudentInformationIdentifier = "DefineStudentInformation"
     
     let ConfirmationOverrideLocationMessage = "You have already posted a student location. Would you like to override your current Location?"
     
-    var studentLocationManager: StudentLocationManager!
+    var studentInformationManager: StudentInformationManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         mapView.delegate = self
         
-        studentLocationManager = StudentLocationManager.sharedInstance
+        studentInformationManager = StudentInformationManager.sharedInstance
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        studentLocationManager.delegate = self
+        studentInformationManager.delegate = self
         
-        studentLocationManager.refreshIfRequired({
+        studentInformationManager.refreshIfRequired({
             self.refreshInProgress()
         })
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        studentLocationManager.delegate = nil
+        studentInformationManager.delegate = nil
     }
     
     func refreshInProgress() {
-        view.userInteractionEnabled = false
+        refreshButton.enabled = false
+//        view.userInteractionEnabled = false
         self.activityIndicator.startAnimating()
     }
     
-    func refreshInProgressWithAlpha() {
-        view.alpha = Constants.UI.inactiveViewAlpha
-        refreshInProgress()
-    }
-    
     func refreshDone() {
-        view.userInteractionEnabled = true
+        refreshButton.enabled = true
+//        view.userInteractionEnabled = true
         // Always set the alpha to Constants.UI.activeViewAlpha
-        view.alpha = Constants.UI.activeViewAlpha
+//        view.alpha = Constants.UI.activeViewAlpha
         self.activityIndicator.stopAnimating()
     }
-        
+    
     
     func reloadMap() {
         // Remove annotations
@@ -70,21 +67,21 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLoc
             self.mapView.removeAnnotations(self.mapView.annotations)
         }
         
-        println("Adding: \(studentLocationManager.currentStudentLocations!.count)")
-        for studentLocation in studentLocationManager.currentStudentLocations! {
-            addStudentToMapView(studentLocation)
+        println("Adding: \(studentInformationManager.currentStudentsInformation!.count)")
+        for studentInformation in studentInformationManager.currentStudentsInformation! {
+            addStudentToMapView(studentInformation)
         }
 
     }
     
     // MARK: - StudentLocationManagerDelegate
     
-    func studentLocationsDidFetch() {
+    func studentsInformationDidFetch() {
         reloadMap()
         refreshDone()
     }
     
-    func studentLocationsFetchError(error: NSError) {
+    func studentsInformationFetchError(error: NSError) {
         showMessageWithTitle("Error while updating the map", message: error.localizedDescription)
         refreshDone()
     }
@@ -111,7 +108,7 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLoc
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
         if control == view.rightCalloutAccessoryView {
             if let mediaURL = view.annotation.subtitle {
-                if !openURL(string: mediaURL) {
+                if !URLUtils.openURL(string: mediaURL) {
                     showMessageWithTitle("Error", message: "Could not open URL: \(mediaURL)")
                 }
             } else {
@@ -124,36 +121,36 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLoc
     // MARK: - Actions
     
     @IBAction func placeStudentLocation(sender: UIBarButtonItem) {
-        if StudentLocationManager.sharedInstance.myLocationExists() {
+        if StudentInformationManager.sharedInstance.myStudentInformationExists() {
             showConfirmation(ConfirmationOverrideLocationMessage, resolutionHandler: {
                 (confirmed) in
                 if confirmed {
-                    self.performSegueWithIdentifier(self.DefineStudentLocationIdentifier, sender: self)
+                    self.performSegueWithIdentifier(self.DefineStudentInformationIdentifier, sender: self)
                 }
             })
         }
     }
     
-    @IBAction func reloadStudentLocationsOnMap(sender: AnyObject) {
-        refreshInProgressWithAlpha()
-        // Force a refresh
-        studentLocationManager.refreshStudentLocations()
+    @IBAction func reloadStudentInformationOnMap(sender: AnyObject) {
+        refreshInProgress()
+        
+        studentInformationManager.refreshStudentsInformation()
     }
     
     // MARK: - Map Utilities
     
-    func addStudentToMapView(studentLocation: StudentLocation) {
-        let annotation = buildAnnotationUsingStudentLocation(studentLocation)
+    func addStudentToMapView(studentInformation: StudentInformation) {
+        let annotation = buildAnnotationUsingStudentInformation(studentInformation)
         mapView.addAnnotation(annotation)
     }
     
-    func buildAnnotationUsingStudentLocation(studentLocation: StudentLocation) -> MKAnnotation {
-        let location = CLLocationCoordinate2D(latitude: studentLocation.latitude, longitude: studentLocation.longitude)
+    func buildAnnotationUsingStudentInformation(studentInformation: StudentInformation) -> MKAnnotation {
+        let location = CLLocationCoordinate2D(latitude: studentInformation.latitude, longitude: studentInformation.longitude)
         
         let annotation = MKPointAnnotation()
         annotation.coordinate = location
-        annotation.title = studentLocation.title
-        annotation.subtitle = studentLocation.mediaURL
+        annotation.title = studentInformation.title
+        annotation.subtitle = studentInformation.mediaURL
         
         return annotation
     }

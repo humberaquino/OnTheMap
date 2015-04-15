@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 struct Constants {
-
     
     static let signUpURLString: String = "https://www.udacity.com/account/auth#!/signin"
     
