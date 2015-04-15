@@ -18,13 +18,18 @@ class StudentsListViewController: UITableViewController, StudentLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         studentLocationManager = StudentLocationManager.sharedInstance
-        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        studentLocationManager.delegate = self
         // Update list of students
         refreshStudentLocations()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        studentLocationManager.delegate = nil
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -47,12 +52,13 @@ class StudentsListViewController: UITableViewController, StudentLocationManagerD
         }
     }
     
+    // MARK: - StudentLocationManagerDelegate
     
-    func studentLocationsSuccessfulRefresh() {
+    func studentLocationsDidFetch() {
         refreshStudentLocations()
     }
     
-    func studentLocationsErrorWhileFetching(error: NSError) {
+    func studentLocationsFetchError(error: NSError) {
         showMessageWithTitle("Error fetching the student locaitons", message: error.localizedDescription)
     }
     

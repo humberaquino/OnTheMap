@@ -29,17 +29,21 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLoc
         mapView.delegate = self
         
         studentLocationManager = StudentLocationManager.sharedInstance
-        studentLocationManager.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-                
+        studentLocationManager.delegate = self
+        
         studentLocationManager.refreshIfRequired({
             self.refreshInProgress()
         })
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        studentLocationManager.delegate = nil
+    }
     
     func refreshInProgress() {
         view.userInteractionEnabled = false
@@ -57,30 +61,30 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLoc
         view.alpha = Constants.UI.activeViewAlpha
         self.activityIndicator.stopAnimating()
     }
+        
+    
+    func reloadMap() {
+        // Remove annotations
+        println("Removing: \(self.mapView.annotations.count)")
+        if self.mapView.annotations.count > 0 {
+            self.mapView.removeAnnotations(self.mapView.annotations)
+        }
+        
+        println("Adding: \(studentLocationManager.currentStudentLocations!.count)")
+        for studentLocation in studentLocationManager.currentStudentLocations! {
+            addStudentToMapView(studentLocation)
+        }
 
+    }
     
     // MARK: - StudentLocationManagerDelegate
     
-    func studentLocationsAdded(addedStudentLocations: [StudentLocation]) {
-        for studentLocation in addedStudentLocations {
-            addStudentToMapView(studentLocation)
-        }
-        println("Added \(addedStudentLocations.count) students")
-    }
-    
-    func studentLocationsRemoved(removedStudentLocations: [StudentLocation]) {
-        for studentLocation in removedStudentLocations {
-            removeStudentFromMapView(studentLocation)
-        }
-        println("Removed \(removedStudentLocations.count) students")
-    }
-    
-    func studentLocationsSuccessfulRefresh() {
-        println("Done")
+    func studentLocationsDidFetch() {
+        reloadMap()
         refreshDone()
     }
     
-    func studentLocationsErrorWhileFetching(error: NSError) {
+    func studentLocationsFetchError(error: NSError) {
         showMessageWithTitle("Error while updating the map", message: error.localizedDescription)
         refreshDone()
     }
@@ -141,11 +145,6 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentLoc
     func addStudentToMapView(studentLocation: StudentLocation) {
         let annotation = buildAnnotationUsingStudentLocation(studentLocation)
         mapView.addAnnotation(annotation)
-    }
-    
-    func removeStudentFromMapView(studentLocation: StudentLocation) {
-        let annotation = buildAnnotationUsingStudentLocation(studentLocation)
-        mapView.removeAnnotation(annotation)
     }
     
     func buildAnnotationUsingStudentLocation(studentLocation: StudentLocation) -> MKAnnotation {

@@ -50,7 +50,7 @@ class ErrorUtils {
                 // NSURLErrorNotConnectedToInternet (-1009) -> The connection failed because the device is not connected to the internet.
                 // NSURLErrorTimedOut(-1001) -> The connection timed out.
                 // NSURLErrorCannotFindHost(-1003) -> The connection failed because the host could not be found.
-                return ("Error with internet", msg)
+                return ("Error trying to connect to the Internet", msg)
             } else {
                 // System errors
                 return ("Unexpected error", msg)

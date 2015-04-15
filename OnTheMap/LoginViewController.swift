@@ -50,6 +50,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         unsubscribeToKeyboardNotifications()
     }
     
+    
     @IBAction func signUpAction(sender: UIButton) {
         if !openURL(string: Constants.signUpURLString) {
             showMessageWithTitle("Error", message: "Could not open URL: \(Constants.signUpURLString)")
@@ -84,7 +85,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         udacityClient.loginToUdacityAndGetPublicUserData(username, password: password) { (udacityUser, error) -> Void in
             if let existingErrorTuple = error {
                 // Login error. Inform the user
-                self.showMessageWithTitle(existingErrorTuple.title, message: existingErrorTuple.message)
+                
+                //self.showMessageWithTitle(existingErrorTuple.title, message: existingErrorTuple.message)
+                self.presentCatastrophicView(existingErrorTuple)
+                self.loginInProgress(false)
             } else {
                 // Success. Show the Map view
                 StudentLocationManager.sharedInstance.udacityUser = udacityUser
@@ -175,6 +179,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         } else {
             return nil
         }
+    }
+  
+    
+    func presentCatastrophicView(errorTuple: (title: String, message: String)) {
+        let catastrophicViewController = storyboard?.instantiateViewControllerWithIdentifier("CatastrophicView") as! CatastrophicViewController
+        
+        catastrophicViewController.message = (top: errorTuple.title, bottom: errorTuple.message)
+        
+        presentViewController(catastrophicViewController, animated: true, completion: nil)
     }
 }
 

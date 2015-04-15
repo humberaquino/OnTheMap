@@ -10,10 +10,8 @@ import Foundation
 
 
 @objc protocol StudentLocationManagerDelegate {
-    optional func studentLocationsAdded(newStudentLocation: [StudentLocation])
-    optional func studentLocationsRemoved(newStudentLocation: [StudentLocation])
-    func studentLocationsSuccessfulRefresh()
-    func studentLocationsErrorWhileFetching(error: NSError)
+    func studentLocationsDidFetch()
+    func studentLocationsFetchError(error: NSError)
 }
 
 class StudentLocationManager: NSObject {
@@ -38,26 +36,9 @@ class StudentLocationManager: NSObject {
             if let existingError = error {
                 // Error while fetching
                 self.performOnMainQueue {
-                    self.delegate?.studentLocationsErrorWhileFetching(existingError)
+                    self.delegate?.studentLocationsFetchError(existingError)
                 }
                 return
-            }
-            
-            if self.studentLocationsNotInitialized  {
-                // This is the first time that we fetch the list
-                self.studentLocationsNotInitialized = false
-                self.performOnMainQueue {
-                    self.delegate?.studentLocationsAdded?(newStudentLocationList!)
-                }
-            } else {
-                // Identify what changed
-                let (addedStudents, removedStudents) = self.identifyAddedAndRemovedStudents(newStudentLocationList!)
-                
-                // Noify the delegate about the changes
-                self.performOnMainQueue {
-                    self.delegate?.studentLocationsAdded?(addedStudents)
-                    self.delegate?.studentLocationsRemoved?(removedStudents)
-                }
             }
             
             // Update the current list
@@ -68,7 +49,7 @@ class StudentLocationManager: NSObject {
             
             // Notify about the success
             self.performOnMainQueue {
-                self.delegate?.studentLocationsSuccessfulRefresh()
+                self.delegate?.studentLocationsDidFetch()
             }
         }
     }
@@ -160,43 +141,6 @@ class StudentLocationManager: NSObject {
         }
         return nil
     }
-    
-    func identifyAddedAndRemovedStudents(newStudentLocationList: [StudentLocation]) -> ([StudentLocation], [StudentLocation]) {
-        var addedStudents:[StudentLocation] = []
-        var removedStudents:[StudentLocation]  = []
-        // Detect new students
-        for newStudentLocation in newStudentLocationList {
-            var studentExists = false
-            for existingStudentLocation in self.studentLocations {
-                // FIXME: Put this login in the StudentLocation class
-                if existingStudentLocation.objectId == newStudentLocation.objectId {
-                    studentExists = true
-                    break
-                }
-            }
-            if !studentExists {
-                // A new student!
-                addedStudents.append(newStudentLocation)
-            }
-        }
-        
-        for existingStudentLocation in self.studentLocations {
-            var studentExists = false
-            for newStudentLocation in newStudentLocationList {
-                if existingStudentLocation.objectId == newStudentLocation.objectId {
-                    studentExists = true
-                    break
-                }
-            }
-            if !studentExists {
-                // A removed student
-                removedStudents.append(existingStudentLocation)
-            }
-        }
-        
-        return (addedStudents, removedStudents)
-    }
-   
     
     // Singleton definition
     class var sharedInstance: StudentLocationManager {
