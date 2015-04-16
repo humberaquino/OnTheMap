@@ -81,6 +81,19 @@ class DefineLocationViewController: UIViewController, UITextFieldDelegate {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    
+    func geocodingInProgress(active: Bool) {
+        if active {
+            geolocationActivity.startAnimating()
+            view.userInteractionEnabled = false
+            view.alpha = Constants.UI.inactiveViewAlpha
+        } else {
+            geolocationActivity.stopAnimating()
+            view.alpha = Constants.UI.activeViewAlpha
+            view.userInteractionEnabled = true
+        }
+    }
+    
     // Mark: - Behavior methods
     
     func findOnTheMapUsingPhrase() {
@@ -93,17 +106,22 @@ class DefineLocationViewController: UIViewController, UITextFieldDelegate {
         
         // Start the search
         let geocoder = CLGeocoder()
-        geolocationActivity.startAnimating()
+        
+        
+        geocodingInProgress(true)
+        
         geocoder.geocodeAddressString(searchPhrase, completionHandler: { (result, error) -> Void in
             self.geolocationActivity.stopAnimating()
             
             if error != nil {
                 self.showMessageWithTitle("Geolocation failed", message: error.localizedDescription)
+                self.geocodingInProgress(false)
                 return
             }
             
             if result.count == 0 {
                 self.showMessageWithTitle("Geolocation complete without results", message: "No placemarks were found for search: \(searchPhrase)")
+                self.geocodingInProgress(false)
                 return
             }
             // Ok, no errors and at least one palcemark. Let's use the first one
