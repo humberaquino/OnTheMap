@@ -17,6 +17,7 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
     
     @IBOutlet weak var linkToShareTextField: UITextField!
     
+    @IBOutlet weak var visitLinkButton: UIButton!
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var submitButton: UIButton!
@@ -81,8 +82,10 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
     // MARK: - UITextFieldDelegate
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        // Clear existing text
-        textField.text = ""
+        if textField.text == DefaultShareLinkText {
+            // Clear existing text
+            textField.text = ""
+        }
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
@@ -130,6 +133,22 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
     
     @IBAction func cancelAction(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func visitLink(sender: UIButton) {
+        let errorTuple = validMediaString()
+        if let existErrorTuple = errorTuple {
+            showMessageWithTitle(existErrorTuple.title , message: existErrorTuple.message)
+        } else {
+            self.performSegueWithIdentifier("PreviewShareLink", sender: self)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "PreviewShareLink" {
+            let destination = segue.destinationViewController as! ShareLinkWebPreviewViewController
+            destination.urlString = linkToShareTextField.text
+        }
     }
     
     // MARK: - Behavior

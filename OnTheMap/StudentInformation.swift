@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 class StudentInformation: NSObject {
 
@@ -18,6 +19,10 @@ class StudentInformation: NSObject {
     let mediaURL: String
     let latitude: Double
     let longitude: Double
+    
+    var location: CLLocation {
+        return CLLocation(latitude: latitude, longitude: longitude)
+    }
     
     var title: String {
         return "\(firstName) \(lastName)"

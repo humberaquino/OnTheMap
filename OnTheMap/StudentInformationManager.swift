@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import CoreLocation
 
 @objc protocol StudentInformationManagerDelegate {
     func studentsInformationDidFetch()
@@ -25,6 +25,8 @@ class StudentInformationManager: NSObject {
     var currentStudentsInformation: [StudentInformation]? {
         return studentsInformation
     }
+    
+    var countryInformationMap: [String: Int?]!
     
     var udacityUser: UdacityUser?
     var myStudentInformation: StudentInformation?
@@ -58,6 +60,52 @@ class StudentInformationManager: NSObject {
             myStudentInformation = findStudentInformationWithUniqueKey(udacityUser!.userID)
         }
     }
+    
+    func refreshCountryInformationMap(completionHandler: (results:[CountryInformation]!, error: NSError!) -> Void) {
+        countryInformationMap = [String: Int?]()
+        
+        if  studentsInformation == nil ||  studentsInformation.count == 0 {
+            completionHandler(results:[CountryInformation]() , error: nil)
+            return
+        }
+        
+        var remainingGeolocations = studentsInformation.count
+        
+        for student in studentsInformation {
+            let geocoder = CLGeocoder()
+
+            geocoder.reverseGeocodeLocation(student.location, completionHandler: { (placemarks, error) -> Void in
+                if error != nil {
+                    completionHandler(results:nil, error: error)
+                    return
+                }
+                
+                
+                let placemark = placemarks.last as! CLPlacemark
+                
+                if self.countryInformationMap[placemark.country] == nil {
+                    self.countryInformationMap[placemark.country] = 1
+                } else {
+                    let current = self.countryInformationMap[placemark.country]!!
+                    self.countryInformationMap[placemark.country] = current + 1
+                }
+                
+                remainingGeolocations--
+                if (remainingGeolocations == 0) {
+                    // Done
+                    var results:[CountryInformation] = []
+                    for (key, value) in self.countryInformationMap {
+                        results.append(CountryInformation(name: key, count: value!))
+                    }
+                    
+                    completionHandler(results:results, error: nil)
+                }
+            })
+            
+        }
+    }
+    
+  
     
     func submitStudentInformation(studentInformation: StudentInformation, completitionHandler: (success: Bool, error: NSError!) -> Void) {
         

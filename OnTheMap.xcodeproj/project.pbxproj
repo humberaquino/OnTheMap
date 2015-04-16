@@ -23,6 +23,9 @@
 		578F3CC01AD5C4BE00416B99 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 578F3CBE1AD5C4BE00416B99 /* LaunchScreen.xib */; };
 		578F3CCC1AD5C4BE00416B99 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F3CCB1AD5C4BE00416B99 /* OnTheMapTests.swift */; };
 		578F77641ADF0C0500B7A512 /* URLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F77631ADF0C0500B7A512 /* URLUtils.swift */; };
+		578F77661ADF191E00B7A512 /* CountryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F77651ADF191E00B7A512 /* CountryListViewController.swift */; };
+		578F77691ADF199900B7A512 /* CountryInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F77681ADF199900B7A512 /* CountryInformation.swift */; };
+		578F776B1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F776A1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift */; };
 		57DD0FE31AD97CF700AC100C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57DD0FE21AD97CF700AC100C /* MapKit.framework */; };
 		57DD0FE51AD9AD6A00AC100C /* DefineLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD0FE41AD9AD6A00AC100C /* DefineLocationViewController.swift */; };
 		57DD0FE71AD9B73800AC100C /* LocationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD0FE61AD9B73800AC100C /* LocationDetailViewController.swift */; };
@@ -68,6 +71,9 @@
 		578F3CCA1AD5C4BE00416B99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		578F3CCB1AD5C4BE00416B99 /* OnTheMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTests.swift; sourceTree = "<group>"; };
 		578F77631ADF0C0500B7A512 /* URLUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLUtils.swift; sourceTree = "<group>"; };
+		578F77651ADF191E00B7A512 /* CountryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListViewController.swift; sourceTree = "<group>"; };
+		578F77681ADF199900B7A512 /* CountryInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryInformation.swift; sourceTree = "<group>"; };
+		578F776A1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareLinkWebPreviewViewController.swift; sourceTree = "<group>"; };
 		57DD0FE21AD97CF700AC100C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		57DD0FE41AD9AD6A00AC100C /* DefineLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefineLocationViewController.swift; sourceTree = "<group>"; };
 		57DD0FE61AD9B73800AC100C /* LocationDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDetailViewController.swift; sourceTree = "<group>"; };
@@ -251,6 +257,7 @@
 			children = (
 				57DD0FE81AD9CB6300AC100C /* StudentsMapViewController.swift */,
 				57DD0FFB1ADC1DB500AC100C /* StudentsListViewController.swift */,
+				578F77651ADF191E00B7A512 /* CountryListViewController.swift */,
 			);
 			name = "Student location tabbed view";
 			sourceTree = "<group>";
@@ -260,6 +267,7 @@
 			children = (
 				57DD0FE41AD9AD6A00AC100C /* DefineLocationViewController.swift */,
 				57DD0FE61AD9B73800AC100C /* LocationDetailViewController.swift */,
+				578F776A1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift */,
 			);
 			name = "Information posting view";
 			sourceTree = "<group>";
@@ -278,6 +286,7 @@
 			children = (
 				57DD0FF71ADC08CF00AC100C /* StudentInformationManager.swift */,
 				57DD0FEC1AD9D7E400AC100C /* StudentInformation.swift */,
+				578F77681ADF199900B7A512 /* CountryInformation.swift */,
 			);
 			name = "Student location";
 			sourceTree = "<group>";
@@ -391,6 +400,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				57DD0FFC1ADC1DB500AC100C /* StudentsListViewController.swift in Sources */,
+				578F776B1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift in Sources */,
+				578F77661ADF191E00B7A512 /* CountryListViewController.swift in Sources */,
 				57DD0FE91AD9CB6300AC100C /* StudentsMapViewController.swift in Sources */,
 				57DD0FED1AD9D7E400AC100C /* StudentInformation.swift in Sources */,
 				57DD0FEF1AD9DF3800AC100C /* HTTPClient.swift in Sources */,
@@ -401,6 +412,7 @@
 				57DD0FF81ADC08CF00AC100C /* StudentInformationManager.swift in Sources */,
 				57432E811ADD4D5B00429876 /* ErrorUtils.swift in Sources */,
 				57316C7C1AD5CD7C0081B5BB /* LoginViewController.swift in Sources */,
+				578F77691ADF199900B7A512 /* CountryInformation.swift in Sources */,
 				57DD0FE51AD9AD6A00AC100C /* DefineLocationViewController.swift in Sources */,
 				578F77641ADF0C0500B7A512 /* URLUtils.swift in Sources */,
 				5768BA7C1AD721DC00311E58 /* UdacityClient.swift in Sources */,

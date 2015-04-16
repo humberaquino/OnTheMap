@@ -109,14 +109,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func loginInProgress(inProgress: Bool) {
         if inProgress {
             view.userInteractionEnabled = false
-            view.alpha = Constants.UI.inactiveViewAlpha
-            activityView.startAnimating()
-            loginButton.setTitle("", forState: UIControlState.Normal)
+
+            self.activityView.alpha = 0
+            self.activityView.startAnimating()
+            
+            UIView.animateWithDuration(0.8, animations: { () -> Void in
+                self.view.alpha = Constants.UI.inactiveViewAlpha
+                self.loginButton.alpha = 0
+                self.activityView.alpha = 1
+            })
+            
         } else {
             view.userInteractionEnabled = true
             view.alpha = Constants.UI.activeViewAlpha
             activityView.stopAnimating()
-            loginButton.setTitle("Login", forState: UIControlState.Normal)
+            self.loginButton.alpha = 1
         }
     }
     
