@@ -9,12 +9,14 @@
 import Foundation
 import UIKit
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var activityView: UIActivityIndicatorView!
+    
+    @IBOutlet weak var facebookLoginButton: FBSDKLoginButton!
     
     var tapRecognizer: UITapGestureRecognizer!
     
@@ -31,6 +33,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Delegate setup
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        facebookLoginButton.delegate = self
         
         // Setup the UI looks
         emailTextField.leftPaddingOf(Constants.UI.LEFT_PADDING_FOR_TEXTFIELD)
@@ -42,12 +45,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         addKeyboardDismissRecognizer()
         subscribeToKeyboardNotifications()
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         removeKeyboardDismissRecognizer()
         unsubscribeToKeyboardNotifications()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if let token = FBSDKAccessToken.currentAccessToken() {
+            self.loginInProgress(true)
+            self.authToUdacityUsingToken(token.tokenString)
+        }
     }
     
     
@@ -72,8 +84,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Disabling the login button
         loginInProgress(true)
         
-        let username = emailTextField.text
-        let password = passwordTextField.text
+        let username: String = emailTextField.text
+        let password: String = passwordTextField.text
         
         // Check that username and pasword are not empty
         if username.isEmpty || password.isEmpty {
@@ -81,27 +93,35 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.loginInProgress(false)
             return
         }
-        
-        udacityClient.loginToUdacityAndGetPublicUserData(username, password: password) { (udacityUser, error) -> Void in
-            if let existingErrorTuple = error {
-                // Login error. Inform the user
-                
-                //self.showMessageWithTitle(existingErrorTuple.title, message: existingErrorTuple.message)
-                self.presentCatastrophicView(existingErrorTuple)
-                self.loginInProgress(false)
-            } else {
-                // Success. Show the Map view
-                StudentInformationManager.sharedInstance.udacityUser = udacityUser
-                StudentInformationManager.sharedInstance.refreshRequired = true
-                self.presentMapAndTabView()
-            }            
+
+        // Login to Udacity
+        udacityClient.authToUdacityDirectly(username, password: password) { (udacityUser, error) -> Void in
+            self.handleUdacityAuthComplete(udacityUser, error: error)
+        }
+
+    }
+    
+    //
+    func handleUdacityAuthComplete(udacityUser: UdacityUser?, error: (title: String, message: String)?) {
+        if let existingErrorTuple = error {
+            // Login error. Inform the user
+            self.presentCatastrophicView(existingErrorTuple)
+            self.loginInProgress(false)
+        } else {
+            // Success. Show the Map view
+            StudentInformationManager.sharedInstance.udacityUser = udacityUser
+            StudentInformationManager.sharedInstance.refreshRequired = true
+            self.presentMapAndTabView()
+            
         }
     }
     
     func presentMapAndTabView() {
         let mapAndTabController = self.storyboard?.instantiateViewControllerWithIdentifier(Constants.StoryboardID.MapAndTabView) as! UITabBarController
         
-        self.presentViewController(mapAndTabController, animated: true, completion: nil)
+        self.presentViewController(mapAndTabController, animated: true) {
+            self.loginInProgress(false)
+        }
     }
     
    
@@ -109,9 +129,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func loginInProgress(inProgress: Bool) {
         if inProgress {
             view.userInteractionEnabled = false
-
-            self.activityView.alpha = 0
-            self.activityView.startAnimating()
+            activityView.alpha = 0
+            activityView.startAnimating()
+            facebookLoginButton.hidden = true
             
             UIView.animateWithDuration(0.8, animations: { () -> Void in
                 self.view.alpha = Constants.UI.inactiveViewAlpha
@@ -121,6 +141,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
         } else {
             view.userInteractionEnabled = true
+            facebookLoginButton.hidden = false
             view.alpha = Constants.UI.activeViewAlpha
             activityView.stopAnimating()
             self.loginButton.alpha = 1
@@ -186,6 +207,44 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         } else {
             return nil
         }
+    }
+    
+    // MARK: - FBSDKLoginButtonDelegate
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        if error != nil {
+            showMessageWithTitle("Facebook login error", message: error.localizedDescription)
+            self.loginInProgress(false)
+        } else if result.isCancelled {
+            showMessageWithTitle("Facebook login cancelled", message: "The user cancelled the login")
+            self.loginInProgress(false)
+        } else {
+            if result.token == nil {
+                showMessageWithTitle("Facebook login error", message: "No access token provided by Facebook")
+            } else {
+                // Success facebook login. Now lets auth into Udacity
+                self.loginInProgress(true)
+                let token = result.token.tokenString
+                self.authToUdacityUsingToken(token)
+            }
+            
+        }
+    }
+    
+    func authToUdacityUsingToken(token: String) {
+        udacityClient.authToUdacityUsingFacebook(token, completitionHandler: { (udacityUser, error) -> Void in
+            if let errorTuple = error {
+                self.showMessageWithTitle(errorTuple.title, message: errorTuple.message)
+                self.loginInProgress(false)
+                return
+            }
+            // Success login to Udacity via Facebook
+            self.handleUdacityAuthComplete(udacityUser, error: error)
+        })
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        // No op
+        println("User Logged Out")
     }
   
     

@@ -20,11 +20,40 @@ class UdacityClient : NSObject {
         super.init()
     }
     
-    // MARK: - Main client method. All completition handlers are executed on main queue
+    // MARK: - Main client methods. All completition handlers are executed on main queue
     
-    func loginToUdacityAndGetPublicUserData(username: String, password: String, completitionHandler: (udacityUser: UdacityUser?, error: (title: String, message: String)?) -> Void) {
+    func authToUdacityUsingFacebook(token: String, completitionHandler: (udacityUser: UdacityUser?, error: (title: String, message: String)?) -> Void) {
+        
+        loginToUdacityUsingFacebook(token) { (userID, loginError) -> Void in
+            if let existingError = loginError {
+                // Login error
+                let errorTuple = ErrorUtils.errorToTuple(existingError)
+                self.performOnMainQueue {
+                    completitionHandler(udacityUser: nil, error: errorTuple)
+                }
+                return
+            }
+            
+            self.getPublicUserData(userID!, userDataCompleteHandler: { (udacityUser, userDataError) -> Void in
+                if let existingError = userDataError {
+                    // getting public user data error
+                    let errorTuple = ErrorUtils.errorToTuple(existingError)
+                    self.performOnMainQueue {
+                        completitionHandler(udacityUser: nil, error: errorTuple)
+                    }
+                    return
+                }
+                
+                // Success
+                completitionHandler(udacityUser: udacityUser, error: nil)
+            })
+            
+        }
+    }
+    
+    func authToUdacityDirectly(username: String, password: String, completitionHandler: (udacityUser: UdacityUser?, error: (title: String, message: String)?) -> Void) {
       
-        loginToUdacity(username, password: password) { (userID, loginError) -> Void in
+        loginToUdacityDirectly(username, password: password) { (userID, loginError) -> Void in
             if let existingError = loginError {
                 // Login error
                 let errorTuple = ErrorUtils.errorToTuple(existingError)
@@ -51,6 +80,7 @@ class UdacityClient : NSObject {
         }
     }
     
+    // For a logged user, gets it's udacity data
     func getPublicUserData(userID: String, userDataCompleteHandler: (udacityUser: UdacityUser?, error: NSError?) -> Void){
         
         // Success. Save the userID and notify the success
@@ -85,14 +115,31 @@ class UdacityClient : NSObject {
        
     }
     
-    func loginToUdacity(username: String, password: String, loginCompleteHandler: (userID: String?, error: NSError?) -> Void) {
+    // Login using a facebook token
+    func loginToUdacityUsingFacebook(token: String, loginCompleteHandler: (userID: String?, error: NSError?) -> Void) {
+        let jsonBody = [
+            "facebook_mobile" : [
+                "access_token": token
+            ]
+        ] as NSDictionary
         
+        loginToUdacityUsingJSONBody(jsonBody, loginCompleteHandler: loginCompleteHandler)
+    }
+    
+    // Username and password login
+    func loginToUdacityDirectly(username: String, password: String, loginCompleteHandler: (userID: String?, error: NSError?) -> Void) {
         let jsonBody = [
             "udacity" : [
                 "username": username,
                 "password": password
             ]
         ] as NSDictionary
+        
+        loginToUdacityUsingJSONBody(jsonBody, loginCompleteHandler: loginCompleteHandler)
+    }
+    
+    // Generic method used to login to udacity
+    func loginToUdacityUsingJSONBody(jsonBody: NSDictionary, loginCompleteHandler: (userID: String?, error: NSError?) -> Void) {
         
         httpClient.jsonSkipDataCharsTaskForPOSTMethod(Constants.BaseURLSecure, method: Methods.Session, parameters: nil, headers: nil, body: jsonBody, skipChars: Constants.UdacitySkipChars) {
             (jsonResponse, response, error) -> Void in
@@ -137,8 +184,6 @@ class UdacityClient : NSObject {
                     }
                 }
             }
-            
-            
         }
     }
     

@@ -17,6 +17,8 @@
 		5768BA781AD7001F00311E58 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA771AD7001F00311E58 /* Constants.swift */; };
 		5768BA7C1AD721DC00311E58 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA7B1AD721DC00311E58 /* UdacityClient.swift */; };
 		5768BA7E1AD72B8900311E58 /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA7D1AD72B8900311E58 /* UdacityConstants.swift */; };
+		576DC8931AE00A0C0026557C /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576DC8911AE00A0C0026557C /* FBSDKCoreKit.framework */; };
+		576DC8941AE00A0C0026557C /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576DC8921AE00A0C0026557C /* FBSDKLoginKit.framework */; };
 		578F3CB61AD5C4BE00416B99 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F3CB51AD5C4BE00416B99 /* AppDelegate.swift */; };
 		578F3CBB1AD5C4BE00416B99 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 578F3CB91AD5C4BE00416B99 /* Main.storyboard */; };
 		578F3CBD1AD5C4BE00416B99 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 578F3CBC1AD5C4BE00416B99 /* Images.xcassets */; };
@@ -26,6 +28,7 @@
 		578F77661ADF191E00B7A512 /* CountryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F77651ADF191E00B7A512 /* CountryListViewController.swift */; };
 		578F77691ADF199900B7A512 /* CountryInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F77681ADF199900B7A512 /* CountryInformation.swift */; };
 		578F776B1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F776A1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift */; };
+		57DA1C5A1AE04A2E00C4FD28 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DA1C591AE04A2E00C4FD28 /* SettingsViewController.swift */; };
 		57DD0FE31AD97CF700AC100C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57DD0FE21AD97CF700AC100C /* MapKit.framework */; };
 		57DD0FE51AD9AD6A00AC100C /* DefineLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD0FE41AD9AD6A00AC100C /* DefineLocationViewController.swift */; };
 		57DD0FE71AD9B73800AC100C /* LocationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD0FE61AD9B73800AC100C /* LocationDetailViewController.swift */; };
@@ -61,6 +64,9 @@
 		5768BA791AD70E2400311E58 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5768BA7B1AD721DC00311E58 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
 		5768BA7D1AD72B8900311E58 /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
+		576DC88C1AE0047A0026557C /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		576DC8911AE00A0C0026557C /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		576DC8921AE00A0C0026557C /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		578F3CB01AD5C4BE00416B99 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		578F3CB41AD5C4BE00416B99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		578F3CB51AD5C4BE00416B99 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +80,7 @@
 		578F77651ADF191E00B7A512 /* CountryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListViewController.swift; sourceTree = "<group>"; };
 		578F77681ADF199900B7A512 /* CountryInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryInformation.swift; sourceTree = "<group>"; };
 		578F776A1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareLinkWebPreviewViewController.swift; sourceTree = "<group>"; };
+		57DA1C591AE04A2E00C4FD28 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		57DD0FE21AD97CF700AC100C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		57DD0FE41AD9AD6A00AC100C /* DefineLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefineLocationViewController.swift; sourceTree = "<group>"; };
 		57DD0FE61AD9B73800AC100C /* LocationDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDetailViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +100,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				57DD0FE31AD97CF700AC100C /* MapKit.framework in Frameworks */,
+				576DC8931AE00A0C0026557C /* FBSDKCoreKit.framework in Frameworks */,
+				576DC8941AE00A0C0026557C /* FBSDKLoginKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +136,7 @@
 		57432E821ADD4D6300429876 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				5768BA771AD7001F00311E58 /* Constants.swift */,
 				57432E801ADD4D5B00429876 /* ErrorUtils.swift */,
 				578F77631ADF0C0500B7A512 /* URLUtils.swift */,
 			);
@@ -147,6 +157,8 @@
 		578F3CA71AD5C4BE00416B99 = {
 			isa = PBXGroup;
 			children = (
+				576DC8911AE00A0C0026557C /* FBSDKCoreKit.framework */,
+				576DC8921AE00A0C0026557C /* FBSDKLoginKit.framework */,
 				57DD0FE21AD97CF700AC100C /* MapKit.framework */,
 				5768BA791AD70E2400311E58 /* README.md */,
 				578F3CB21AD5C4BE00416B99 /* OnTheMap */,
@@ -172,7 +184,6 @@
 				5768BA7F1AD72B8F00311E58 /* Model */,
 				57DD0FF91ADC1CBE00AC100C /* Controller */,
 				57432E821ADD4D6300429876 /* Utils */,
-				5768BA771AD7001F00311E58 /* Constants.swift */,
 				578F77621ADF03D000B7A512 /* Core extensions */,
 				578F3CBC1AD5C4BE00416B99 /* Images.xcassets */,
 				578F3CBE1AD5C4BE00416B99 /* LaunchScreen.xib */,
@@ -185,6 +196,7 @@
 		578F3CB31AD5C4BE00416B99 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				576DC88C1AE0047A0026557C /* Bridging-Header.h */,
 				578F3CB41AD5C4BE00416B99 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -214,6 +226,14 @@
 				57DD0FF51ADBFFFC00AC100C /* FoundationExtensions.swift */,
 			);
 			name = "Core extensions";
+			sourceTree = "<group>";
+		};
+		57DA1C5B1AE04EA400C4FD28 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				57DA1C591AE04A2E00C4FD28 /* SettingsViewController.swift */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		57DD0FF01AD9E17D00AC100C /* Generic */ = {
@@ -248,6 +268,7 @@
 				57DD0FFE1ADC43E900AC100C /* Login view */,
 				57DD0FFA1ADC1CCD00AC100C /* Student location tabbed view */,
 				57DD0FFD1ADC43C500AC100C /* Information posting view */,
+				57DA1C5B1AE04EA400C4FD28 /* Settings */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -414,6 +435,7 @@
 				57316C7C1AD5CD7C0081B5BB /* LoginViewController.swift in Sources */,
 				578F77691ADF199900B7A512 /* CountryInformation.swift in Sources */,
 				57DD0FE51AD9AD6A00AC100C /* DefineLocationViewController.swift in Sources */,
+				57DA1C5A1AE04A2E00C4FD28 /* SettingsViewController.swift in Sources */,
 				578F77641ADF0C0500B7A512 /* URLUtils.swift in Sources */,
 				5768BA7C1AD721DC00311E58 /* UdacityClient.swift in Sources */,
 				578F3CB61AD5C4BE00416B99 /* AppDelegate.swift in Sources */,
@@ -543,9 +565,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/humber/Documents/FacebookSDK,
+				);
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "OnTheMap/Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -553,9 +583,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/humber/Documents/FacebookSDK,
+				);
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "OnTheMap/Bridging-Header.h";
 			};
 			name = Release;
 		};
