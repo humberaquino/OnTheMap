@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Error utils for the App
 class ErrorUtils {
     
     class func errorForJSONParsingToDictionary(data: NSData?) -> NSError {
@@ -47,9 +48,6 @@ class ErrorUtils {
         } else {
             if error.domain == "NSURLErrorDomain" {
                 // Ref: http://nshipster.com/nserror/
-                // NSURLErrorNotConnectedToInternet (-1009) -> The connection failed because the device is not connected to the internet.
-                // NSURLErrorTimedOut(-1001) -> The connection timed out.
-                // NSURLErrorCannotFindHost(-1003) -> The connection failed because the host could not be found.
                 return ("Error trying to connect to the Internet", msg)
             } else {
                 // System errors
@@ -60,7 +58,7 @@ class ErrorUtils {
 }
 
 extension ErrorUtils {
-    // MARK: - Errors
+
     struct ErrorDomains {
         static let ClientError = "ClientError"
         static let ServerError = "ServerError"

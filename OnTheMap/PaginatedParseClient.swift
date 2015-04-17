@@ -9,18 +9,21 @@
 import Foundation
 
 
-// It needs a cancel method
+// Client used to do compound requests to the Parse API
 class PaginatedParseClient: NSObject {
     
-    let limit = Constants.BatchRequestSize
+    let limit = Config.Parse.BatchRequestSize
     
+    // Counter properties. Used to track the fetching process
     private var currentCount: Int!
     private var currentPage: Int!
     private var currentTotalPages: Int!
     
+    // Flag properties. Used to know if the fetching or a request is in process
     private var paginationRunning = false
     private var requestRunning = false
     
+    // The client used to do the requests
     let parseClient: ParseClient
     
     init(parseClient: ParseClient) {
@@ -30,10 +33,13 @@ class PaginatedParseClient: NSObject {
     // This is the definite callback
     var currentFetchComplete: ((result: [StudentInformation]?, error: NSError?) -> Void)!
     
+    // The timer that will call the method "nextRequest" when necesary
     var timer: NSTimer!
     
+    // The final results!
     var resultList: [StudentInformation]!
     
+    // Featch all student information in a paginated way
     func fetchStudentInformationPaginated(fetchComplete: (result: [StudentInformation]?, error: NSError?) -> Void) -> Bool {
         if paginationRunning {
             // It's running. Skip the fetch
@@ -63,13 +69,14 @@ class PaginatedParseClient: NSObject {
                 
                 self.currentFetchComplete = fetchComplete
                 
-                self.timer = NSTimer.scheduledTimerWithTimeInterval(Constants.TimerIntervalRequests, target: self, selector: "nextRequest:", userInfo: nil, repeats: true)
+                self.timer = NSTimer.scheduledTimerWithTimeInterval(Config.Network.TimerIntervalRequests, target: self, selector: "nextRequest:", userInfo: nil, repeats: true)
                  // Now the control is passed to the "nextRequest" method
             })
         }
         return true
     }
     
+    // Method called by the timer. It is responsible of doing a single page request and call for completion
     func nextRequest(timer:NSTimer!) {
         if requestRunning {
             // Do nothing. Just wait for the next turn
@@ -116,7 +123,7 @@ class PaginatedParseClient: NSObject {
         }
     }
     
-    
+    // Check if fetching is done
     func allPagesDone() -> Bool {
         return self.currentPage == self.currentTotalPages - 1
     }

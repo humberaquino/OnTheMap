@@ -14,9 +14,12 @@
 		57316C7C1AD5CD7C0081B5BB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57316C7B1AD5CD7C0081B5BB /* LoginViewController.swift */; };
 		57432E811ADD4D5B00429876 /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57432E801ADD4D5B00429876 /* ErrorUtils.swift */; };
 		57440FFE1ADEDA6200C7D358 /* CatastrophicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57440FFD1ADEDA6200C7D358 /* CatastrophicViewController.swift */; };
+		5762D6361AE1C8A800D20884 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762D6351AE1C8A800D20884 /* Config.swift */; };
+		5762D6381AE1CB3B00D20884 /* ParseClientExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762D6371AE1CB3B00D20884 /* ParseClientExtensions.swift */; };
+		5762D63A1AE1CC9A00D20884 /* HTTPClientExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762D6391AE1CC9A00D20884 /* HTTPClientExtensions.swift */; };
 		5768BA781AD7001F00311E58 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA771AD7001F00311E58 /* Constants.swift */; };
 		5768BA7C1AD721DC00311E58 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA7B1AD721DC00311E58 /* UdacityClient.swift */; };
-		5768BA7E1AD72B8900311E58 /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA7D1AD72B8900311E58 /* UdacityConstants.swift */; };
+		5768BA7E1AD72B8900311E58 /* UdacityClientEntensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5768BA7D1AD72B8900311E58 /* UdacityClientEntensions.swift */; };
 		576DC8931AE00A0C0026557C /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576DC8911AE00A0C0026557C /* FBSDKCoreKit.framework */; };
 		576DC8941AE00A0C0026557C /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576DC8921AE00A0C0026557C /* FBSDKLoginKit.framework */; };
 		578F3CB61AD5C4BE00416B99 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F3CB51AD5C4BE00416B99 /* AppDelegate.swift */; };
@@ -61,10 +64,13 @@
 		57316C7B1AD5CD7C0081B5BB /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		57432E801ADD4D5B00429876 /* ErrorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorUtils.swift; sourceTree = "<group>"; };
 		57440FFD1ADEDA6200C7D358 /* CatastrophicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatastrophicViewController.swift; sourceTree = "<group>"; };
+		5762D6351AE1C8A800D20884 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		5762D6371AE1CB3B00D20884 /* ParseClientExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseClientExtensions.swift; sourceTree = "<group>"; };
+		5762D6391AE1CC9A00D20884 /* HTTPClientExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPClientExtensions.swift; sourceTree = "<group>"; };
 		5768BA771AD7001F00311E58 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5768BA791AD70E2400311E58 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5768BA7B1AD721DC00311E58 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
-		5768BA7D1AD72B8900311E58 /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
+		5768BA7D1AD72B8900311E58 /* UdacityClientEntensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClientEntensions.swift; sourceTree = "<group>"; };
 		576DC88C1AE0047A0026557C /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		576DC8911AE00A0C0026557C /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		576DC8921AE00A0C0026557C /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -182,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				578F3CB51AD5C4BE00416B99 /* AppDelegate.swift */,
+				5762D6351AE1C8A800D20884 /* Config.swift */,
 				578F3CB91AD5C4BE00416B99 /* Main.storyboard */,
 				5768BA7F1AD72B8F00311E58 /* Model */,
 				57DD0FF91ADC1CBE00AC100C /* Controller */,
@@ -242,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				57DD0FEE1AD9DF3800AC100C /* HTTPClient.swift */,
+				5762D6391AE1CC9A00D20884 /* HTTPClientExtensions.swift */,
 			);
 			name = Generic;
 			sourceTree = "<group>";
@@ -250,7 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				5768BA7B1AD721DC00311E58 /* UdacityClient.swift */,
-				5768BA7D1AD72B8900311E58 /* UdacityConstants.swift */,
+				5768BA7D1AD72B8900311E58 /* UdacityClientEntensions.swift */,
 				57DD10001ADC765C00AC100C /* UdacityUser.swift */,
 			);
 			name = Udacity;
@@ -260,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				57DD0FF21AD9E20700AC100C /* ParseClient.swift */,
+				5762D6371AE1CB3B00D20884 /* ParseClientExtensions.swift */,
 				57E8B94A1AE073500039D1FB /* PaginatedParseClient.swift */,
 			);
 			name = Parse;
@@ -433,7 +442,8 @@
 				57DD0FE71AD9B73800AC100C /* LocationDetailViewController.swift in Sources */,
 				570FF49E1AD6F9720054F8B6 /* UIKitExtensions.swift in Sources */,
 				57440FFE1ADEDA6200C7D358 /* CatastrophicViewController.swift in Sources */,
-				5768BA7E1AD72B8900311E58 /* UdacityConstants.swift in Sources */,
+				5768BA7E1AD72B8900311E58 /* UdacityClientEntensions.swift in Sources */,
+				5762D6381AE1CB3B00D20884 /* ParseClientExtensions.swift in Sources */,
 				57DD0FF81ADC08CF00AC100C /* StudentInformationManager.swift in Sources */,
 				57432E811ADD4D5B00429876 /* ErrorUtils.swift in Sources */,
 				57316C7C1AD5CD7C0081B5BB /* LoginViewController.swift in Sources */,
@@ -442,6 +452,8 @@
 				57DA1C5A1AE04A2E00C4FD28 /* SettingsViewController.swift in Sources */,
 				578F77641ADF0C0500B7A512 /* URLUtils.swift in Sources */,
 				5768BA7C1AD721DC00311E58 /* UdacityClient.swift in Sources */,
+				5762D63A1AE1CC9A00D20884 /* HTTPClientExtensions.swift in Sources */,
+				5762D6361AE1C8A800D20884 /* Config.swift in Sources */,
 				578F3CB61AD5C4BE00416B99 /* AppDelegate.swift in Sources */,
 				5768BA781AD7001F00311E58 /* Constants.swift in Sources */,
 				57DD0FF31AD9E20700AC100C /* ParseClient.swift in Sources */,

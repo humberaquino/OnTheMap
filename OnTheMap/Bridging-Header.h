@@ -9,6 +9,7 @@
 #ifndef OnTheMap_Bridging_Header_h
 #define OnTheMap_Bridging_Header_h
 
+// This is necesary to use Facebook SDK in the project
 #import <Bolts/BFAppLinkResolving.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>

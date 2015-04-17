@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 struct URLUtils {
+    // Opens a URL in the browser
     static func openURL(string urlString: String) -> Bool {
         if let url = NSURL(string: urlString) {
             UIApplication.sharedApplication().openURL(url)

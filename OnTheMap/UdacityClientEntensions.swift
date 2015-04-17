@@ -15,6 +15,7 @@ extension UdacityClient {
         
         // MARK: URLs
         static let BaseURLSecure : String = "https://www.udacity.com/"
+        static let signUpURLString: String = "https://www.udacity.com/account/auth#!/signin"
         static let UdacitySkipChars = 5
     }
     

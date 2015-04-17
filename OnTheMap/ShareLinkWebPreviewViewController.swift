@@ -9,11 +9,14 @@
 import Foundation
 import UIKit
 
+// Used to show a preview of the link the user will submit
 class ShareLinkWebPreviewViewController: UIViewController {
     
     @IBOutlet weak var webView: UIWebView!
     
     var urlString: String!
+    
+    // MARK: - View lyfecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +35,6 @@ class ShareLinkWebPreviewViewController: UIViewController {
         let request = NSURLRequest(URL: url)
         
         webView.loadRequest(request)
-    }
-    
-    
+    }    
     
 }

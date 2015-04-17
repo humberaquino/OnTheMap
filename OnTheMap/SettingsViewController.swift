@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// Settings controller used mainly for logging out
 class SettingsViewController: UITableViewController {
     
     @IBOutlet weak var idCell: UITableViewCell!
@@ -17,9 +18,9 @@ class SettingsViewController: UITableViewController {
     
     var studentInformationManager: StudentInformationManager!
     
-//    private var myContext: UnsafeMutablePointer<Void> = nil
-    
     var udacityUser: UdacityUser!
+    
+    // MARK: - View lyfecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +35,9 @@ class SettingsViewController: UITableViewController {
         firstNameCell.detailTextLabel?.text = udacityUser.firstName
         lastNameCell.detailTextLabel?.text = udacityUser.lastName
     }
-           
+    
+    // MARK: - UITableViewDelegate
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if indexPath.section == 1 && indexPath.row == 0 {
             // Logout

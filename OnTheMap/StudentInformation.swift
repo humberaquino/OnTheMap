@@ -9,6 +9,8 @@
 import Foundation
 import CoreLocation
 
+
+// Main model class used to hold student information to display on the map and the tabbed list
 class StudentInformation: NSObject {
 
     var objectId: String?
@@ -28,8 +30,6 @@ class StudentInformation: NSObject {
         return "\(firstName) \(lastName)"
     }
     
-    
-    
     init(dictionary: [String: AnyObject]) {
         self.uniqueKey = dictionary["uniqueKey"] as! String
         self.firstName = dictionary["firstName"] as! String
@@ -45,7 +45,6 @@ class StudentInformation: NSObject {
         self.init(dictionary: dictionary)
         self.objectId = objectId        
     }
-    
     
     func toJSON() -> NSDictionary {
         var jsonDictionary = [
@@ -66,7 +65,9 @@ class StudentInformation: NSObject {
     }
     
     
+    // MARK: - Utility functions
     
+    // Build a list of StudentInformation out of a proper jsonArray
     class func buildStudentInformationList(jsonArray: NSArray, inout error: NSError?) -> [StudentInformation]? {
         var resultList: [StudentInformation] = []
         
@@ -88,19 +89,11 @@ class StudentInformation: NSObject {
         return resultList
     }
     
+    // Build one StudentInformation out of a proper json
     class func buildStudentInformation(json: NSDictionary, inout error: NSError?) -> StudentInformation? {
         
         let dictionary = json as! [String: AnyObject]
         let objectId = json["objectId"] as! String
-        // FIXME: Remove this comments
-//        let uniqueKey = json["uniqueKey"] as! String
-//        let firstName = json["firstName"] as! String
-//        let lastName = json["lastName"] as! String
-//        let mapString = json["mapString"] as! String
-//        let mediaURL = json["mediaURL"] as! String
-//              
-//        let latitude = json["latitude"] as! Double
-//        let longitude = json["longitude"] as! Double
 
         let studentInformation = StudentInformation(objectId: objectId, dictionary: dictionary)
         

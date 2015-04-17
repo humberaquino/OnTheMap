@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// View controller that handles the display of StudentInformation in tha List
 class StudentsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
@@ -21,11 +22,11 @@ class StudentsListViewController: UIViewController, UITableViewDataSource, UITab
     
     private var myContext: UnsafeMutablePointer<Void> = nil
     
+    // MARK: - View lyfecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         studentInformationManager = StudentInformationManager.sharedInstance
-        
-       
     }
    
     override func viewWillAppear(animated: Bool) {
@@ -46,6 +47,7 @@ class StudentsListViewController: UIViewController, UITableViewDataSource, UITab
             }
         }
         
+        // Subscribe to know when the student list is ready
          studentInformationManager.addObserver(self, forKeyPath: StudentInformationManager.observableState, options: NSKeyValueObservingOptions.New, context: &myContext)
     }
     
@@ -76,21 +78,21 @@ class StudentsListViewController: UIViewController, UITableViewDataSource, UITab
         }
     }
     
+    // MARK: - UI activity
+    
     func refreshInProgress() {
         refreshButton.enabled = false
         placePinButton.enabled = false
-        //        view.userInteractionEnabled = false
         self.activityIndicator.startAnimating()
     }
     
     func refreshDone() {
         refreshButton.enabled = true
         placePinButton.enabled = true
-        //        view.userInteractionEnabled = true
-        // Always set the alpha to Constants.UI.activeViewAlpha
-        //        view.alpha = Constants.UI.activeViewAlpha
         self.activityIndicator.stopAnimating()
     }
+    
+    // MARK: - UITableViewDAtaSource
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("StudentInformationCell") as! UITableViewCell
@@ -112,6 +114,8 @@ class StudentsListViewController: UIViewController, UITableViewDataSource, UITab
         }
     }
     
+    // MARK: - UITableViewDelegate
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let studentInformation = currentStudentsInformation[indexPath.row]
         if !URLUtils.openURL(string: studentInformation.mediaURL) {
@@ -120,6 +124,8 @@ class StudentsListViewController: UIViewController, UITableViewDataSource, UITab
     }
     
 
+    // MARK: - Actions
+    
     @IBAction func reloadStudentInformationOnMap(sender: UIBarButtonItem) {
         refreshInProgress()
         studentInformationManager.refreshIfPossible()

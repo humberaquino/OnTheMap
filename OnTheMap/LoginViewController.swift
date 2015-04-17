@@ -11,11 +11,12 @@ import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
     
+    let AnimationDuration:NSTimeInterval = 0.8
+    
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var activityView: UIActivityIndicatorView!
-    
     @IBOutlet weak var facebookLoginButton: FBSDKLoginButton!
     
     var tapRecognizer: UITapGestureRecognizer!
@@ -36,8 +37,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         facebookLoginButton.delegate = self
         
         // Setup the UI looks
-        emailTextField.leftPaddingOf(Constants.UI.LEFT_PADDING_FOR_TEXTFIELD)
-        passwordTextField.leftPaddingOf(Constants.UI.LEFT_PADDING_FOR_TEXTFIELD)
+        emailTextField.leftPaddingOf(Constants.UI.LettPaddingForTextField)
+        passwordTextField.leftPaddingOf(Constants.UI.LettPaddingForTextField)
         
     }
     
@@ -56,31 +57,34 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        // Check if facebook login already exists
         if let token = FBSDKAccessToken.currentAccessToken() {
             self.loginInProgress(true)
             self.authToUdacityUsingToken(token.tokenString)
         }
     }
     
+    // MARK: - Actions
     
     @IBAction func signUpAction(sender: UIButton) {
-        if !URLUtils.openURL(string: Constants.signUpURLString) {
-            showMessageWithTitle("Error", message: "Could not open URL: \(Constants.signUpURLString)")
+        if !URLUtils.openURL(string: UdacityClient.Constants.signUpURLString) {
+            showMessageWithTitle("Error", message: "Could not open URL: \(UdacityClient.Constants.signUpURLString)")
         }
     }
     
-    
     @IBAction func loginAction(sender: UIButton) {
-        doLogin()
+        doUdacityLogin()
     }
     
+    // Do the login if the enter key is hit
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        doLogin()
+        doUdacityLogin()
         return true
     }
     
-    func doLogin() {
+    //
+    func doUdacityLogin() {
         // Disabling the login button
         loginInProgress(true)
         
@@ -110,10 +114,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         } else {
             // Success. Show the Map view
             StudentInformationManager.sharedInstance.udacityUser = udacityUser
-            // TODO: Add a refresh action here
-//            StudentInformationManager.sharedInstance.refreshRequired = true
             self.presentMapAndTabView()
-            
         }
     }
     
@@ -125,8 +126,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         }
     }
     
-   
-    
+    // MArks the login UI as in progress or done
     func loginInProgress(inProgress: Bool) {
         if inProgress {
             view.userInteractionEnabled = false
@@ -134,8 +134,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
             activityView.startAnimating()
             facebookLoginButton.hidden = true
             
-            UIView.animateWithDuration(0.8, animations: { () -> Void in
-                self.view.alpha = Constants.UI.inactiveViewAlpha
+            UIView.animateWithDuration(AnimationDuration, animations: { () -> Void in
+                self.view.alpha = Constants.UI.InactiveViewAlpha
                 self.loginButton.alpha = 0
                 self.activityView.alpha = 1
             })
@@ -143,7 +143,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         } else {
             view.userInteractionEnabled = true
             facebookLoginButton.hidden = false
-            view.alpha = Constants.UI.activeViewAlpha
+            view.alpha = Constants.UI.ActiveViewAlpha
             activityView.stopAnimating()
             self.loginButton.alpha = 1
         }
@@ -170,7 +170,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
             // Detect if the keyboard is obstructing the current textfield
             if (currentTextFieldY + currentTextFieldHeight + keyboardHeight) >= screenHeight {
                 let visibleSection = screenHeight - keyboardHeight
-                let textFieldBottom = currentTextFieldY + currentTextFieldHeight + Constants.UI.KEYBOARD_MARGIN
+                let textFieldBottom = currentTextFieldY + currentTextFieldHeight + Constants.UI.KeyboardMargin
                 let displacement = textFieldBottom - visibleSection
                 self.view.frame.origin.y = -displacement
             }
@@ -211,6 +211,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     }
     
     // MARK: - FBSDKLoginButtonDelegate
+    
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         if error != nil {
             showMessageWithTitle("Facebook login error", message: error.localizedDescription)

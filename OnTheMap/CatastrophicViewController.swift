@@ -9,16 +9,19 @@
 import Foundation
 import UIKit
 
+// View controller that presents a simple animation when there's a Failure.
+// Used by the Login view controller
 class CatastrophicViewController: UIViewController {
 
     @IBOutlet weak var topLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
-    @IBOutlet weak var catastrophicImageView: UIImageView!
-    
+    @IBOutlet weak var catastrophicImageView: UIImageView!    
     
     var tapRecognizer: UITapGestureRecognizer!
     
     var message: (top: String, bottom: String)!
+    
+    // MARK: - View lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +64,8 @@ class CatastrophicViewController: UIViewController {
         }
         
     }
+    
+    // MARK: - Utils
     
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         dismissViewControllerAnimated(true, completion: nil)

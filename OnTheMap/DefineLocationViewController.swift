@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import CoreLocation
 
+// View to define the location to place the pin to use as my student information
 class DefineLocationViewController: UIViewController, UITextFieldDelegate {
     
     let DefaultLocationPhraseText = "Enter your location here"
     
-    @IBOutlet weak var geolocationActivity: UIActivityIndicatorView!
-    
+    @IBOutlet weak var geolocationActivity: UIActivityIndicatorView!    
     @IBOutlet weak var locationPhraseTextField: UITextField!
     @IBOutlet weak var findOnTheMapButton: UIButton!
     
@@ -26,7 +26,7 @@ class DefineLocationViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Round corners
-        findOnTheMapButton.layer.cornerRadius = 10;
+        findOnTheMapButton.layer.cornerRadius = Constants.UI.RoundCornerRadius;
         
         // Delegate setup
         locationPhraseTextField.delegate = self
@@ -77,7 +77,6 @@ class DefineLocationViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func cancelAction(sender: UIButton) {
-        // TODO: Cancel geolocation
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -86,10 +85,10 @@ class DefineLocationViewController: UIViewController, UITextFieldDelegate {
         if active {
             geolocationActivity.startAnimating()
             view.userInteractionEnabled = false
-            view.alpha = Constants.UI.inactiveViewAlpha
+            view.alpha = Constants.UI.InactiveViewAlpha
         } else {
             geolocationActivity.stopAnimating()
-            view.alpha = Constants.UI.activeViewAlpha
+            view.alpha = Constants.UI.ActiveViewAlpha
             view.userInteractionEnabled = true
         }
     }
@@ -106,8 +105,7 @@ class DefineLocationViewController: UIViewController, UITextFieldDelegate {
         
         // Start the search
         let geocoder = CLGeocoder()
-        
-        
+                
         geocodingInProgress(true)
         
         geocoder.geocodeAddressString(searchPhrase, completionHandler: { (result, error) -> Void in

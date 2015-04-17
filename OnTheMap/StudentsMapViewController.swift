@@ -10,32 +10,31 @@ import Foundation
 import UIKit
 import MapKit
 
+// View controller that handles the display of StudentInformation in tha map
 class StudentsMapViewController: UIViewController, MKMapViewDelegate {
 
+    let StudentPinIdentifier = "StudentPin"
+    let DefineStudentInformationIdentifier = "DefineStudentInformation"
+    let ConfirmationOverrideLocationMessage = "You have already posted a student location. Would you like to override your current Location?"
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     @IBOutlet weak var placePinButton: UIBarButtonItem!
     
-    let StudentPinIdentifier = "StudentPin"
-    let DefineStudentInformationIdentifier = "DefineStudentInformation"
-    
-    let ConfirmationOverrideLocationMessage = "You have already posted a student location. Would you like to override your current Location?"
-    
     var studentInformationManager: StudentInformationManager!
+
+    // Data source
     var currentStudentsInformation: [StudentInformation]!
-    
     
     private var myContext: UnsafeMutablePointer<Void> = nil
     
+    // MARK: View clifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         mapView.delegate = self
         studentInformationManager = StudentInformationManager.sharedInstance
-        
-       
     }
   
     
@@ -58,6 +57,7 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         
+        // Observe the state of the students fetch
         studentInformationManager.addObserver(self, forKeyPath: StudentInformationManager.observableState, options: NSKeyValueObservingOptions.New, context: &myContext)
     }
     
@@ -65,6 +65,8 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
         super.viewWillDisappear(animated)
         studentInformationManager.removeObserver(self, forKeyPath: StudentInformationManager.observableState)
     }
+    
+    // MARK: - KVO
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         if context == &myContext {
@@ -88,37 +90,20 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    // MARK: UI activity
+    
     func refreshInProgress() {
         refreshButton.enabled = false
         placePinButton.enabled = false
-//        view.userInteractionEnabled = false
         self.activityIndicator.startAnimating()
     }
     
     func refreshDone() {
         refreshButton.enabled = true
         placePinButton.enabled = true
-//        view.userInteractionEnabled = true
-        // Always set the alpha to Constants.UI.activeViewAlpha
-//        view.alpha = Constants.UI.activeViewAlpha
         self.activityIndicator.stopAnimating()
     }
     
-    
-    func reloadMap() {
-        // Remove annotations
-        println("Removing: \(self.mapView.annotations.count)")
-        if self.mapView.annotations.count > 0 {
-            self.mapView.removeAnnotations(self.mapView.annotations)
-        }
-        
-        println("Adding: \(currentStudentsInformation!.count)")
-        for studentInformation in currentStudentsInformation! {
-            addStudentToMapView(studentInformation)
-        }
-
-    }       
-
     // MARK: MKMapViewDelegate
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -170,6 +155,19 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
     
     // MARK: - Map Utilities
     
+    func reloadMap() {
+        // Remove annotations
+        println("Removing: \(self.mapView.annotations.count)")
+        if self.mapView.annotations.count > 0 {
+            self.mapView.removeAnnotations(self.mapView.annotations)
+        }
+        
+        println("Adding: \(currentStudentsInformation!.count)")
+        for studentInformation in currentStudentsInformation! {
+            addStudentToMapView(studentInformation)
+        }        
+    }
+
     func addStudentToMapView(studentInformation: StudentInformation) {
         let annotation = buildAnnotationUsingStudentInformation(studentInformation)
         mapView.addAnnotation(annotation)

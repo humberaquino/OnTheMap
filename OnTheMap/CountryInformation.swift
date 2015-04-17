@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Class used to track a country and the amount of students it has
 class CountryInformation: NSObject {
     
     let name: String

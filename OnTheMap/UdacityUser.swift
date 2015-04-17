@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Info that Udacity login provides after login
 struct UdacityUser {
     let userID: String
     let firstName: String

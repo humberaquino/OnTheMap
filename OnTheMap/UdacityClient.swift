@@ -13,7 +13,6 @@ import Foundation
 class UdacityClient : NSObject {
     
     let httpClient: HTTPClient
-
     
     override init() {
         httpClient = HTTPClient.sharedInstance
@@ -22,6 +21,7 @@ class UdacityClient : NSObject {
     
     // MARK: - Main client methods. All completition handlers are executed on main queue
     
+    // Auth using Facebook login
     func authToUdacityUsingFacebook(token: String, completitionHandler: (udacityUser: UdacityUser?, error: (title: String, message: String)?) -> Void) {
         
         loginToUdacityUsingFacebook(token) { (userID, loginError) -> Void in
@@ -33,7 +33,7 @@ class UdacityClient : NSObject {
                 }
                 return
             }
-            
+            // Login success. Now let's get the data of the logged user
             self.getPublicUserData(userID!, userDataCompleteHandler: { (udacityUser, userDataError) -> Void in
                 if let existingError = userDataError {
                     // getting public user data error
@@ -51,6 +51,7 @@ class UdacityClient : NSObject {
         }
     }
     
+    // Auth using Udacity login
     func authToUdacityDirectly(username: String, password: String, completitionHandler: (udacityUser: UdacityUser?, error: (title: String, message: String)?) -> Void) {
       
         loginToUdacityDirectly(username, password: password) { (userID, loginError) -> Void in
@@ -63,6 +64,7 @@ class UdacityClient : NSObject {
                 return
             }
             
+            // Login success. Now let's get the data of the logged user
             self.getPublicUserData(userID!, userDataCompleteHandler: { (udacityUser, userDataError) -> Void in
                 if let existingError = userDataError {
                     // getting public user data error
@@ -187,9 +189,8 @@ class UdacityClient : NSObject {
         }
     }
     
-    // MARK: - Parse utilities
+    // MARK: - Parsing utilities
     
-
     func parseUdacityUser(userID: String, json: NSDictionary!, inout error: NSError?) -> UdacityUser? {
         var message = ""
         

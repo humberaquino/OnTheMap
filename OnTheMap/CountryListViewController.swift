@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// View that displays the amount of students information per country
 class CountryListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var activityView: UIActivityIndicatorView!
@@ -19,6 +20,8 @@ class CountryListViewController: UIViewController, UITableViewDataSource, UITabl
     var currentCountryList: [CountryInformation]!
     
     private var myContext: UnsafeMutablePointer<Void> = nil
+    
+    // MARK: - View lyfecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +51,8 @@ class CountryListViewController: UIViewController, UITableViewDataSource, UITabl
         studentInformationManager.removeObserver(self, forKeyPath: StudentInformationManager.observableState)        
     }
     
+    // MARK: - KVO
+    
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         if context == &myContext {
             let newState = change[NSKeyValueChangeNewKey] as! String
@@ -67,21 +72,18 @@ class CountryListViewController: UIViewController, UITableViewDataSource, UITabl
         }
     }
     
+    // MARK: - UI activity
+    
     func refreshInProgress() {
-//        refreshButton.enabled = false
-//        placePinButton.enabled = false
-        //        view.userInteractionEnabled = false
         self.activityView.startAnimating()
     }
     
     func refreshDone() {
-//        refreshButton.enabled = true
-//        placePinButton.enabled = true
-        //        view.userInteractionEnabled = true
-        // Always set the alpha to Constants.UI.activeViewAlpha
-        //        view.alpha = Constants.UI.activeViewAlpha
         self.activityView.stopAnimating()
     }
+    
+    
+    // MARK: - UITableViewDataSource
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if currentCountryList == nil {

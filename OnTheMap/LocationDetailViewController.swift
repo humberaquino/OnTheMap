@@ -10,33 +10,39 @@ import Foundation
 import UIKit
 import MapKit
 
+// View used to specify the url string and the location of the student
 class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextFieldDelegate {
 
+    // Constants
     let DefaultShareLinkText = "Enter a link to share here"
     let NewStudentPinIdentifier = "NewStudentPin"
     
+    // Outlets
     @IBOutlet weak var linkToShareTextField: UITextField!
-    
     @IBOutlet weak var visitLinkButton: UIButton!
-    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var submitButton: UIButton!
     
     var tapRecognizer: UITapGestureRecognizer!
-    
+
+    // Current coordinates
     var coordinates: CLLocationCoordinate2D!
     
+    // Map string to use
     var mapString: String!
     
     var studentInformationManager: StudentInformationManager!
     
+    // MARK: - View lyfecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Round corners
-        submitButton.layer.cornerRadius = 10;
+        submitButton.layer.cornerRadius = Constants.UI.RoundCornerRadius;
 
         studentInformationManager = StudentInformationManager.sharedInstance
         
+        // Delegates
         mapView.delegate = self
         linkToShareTextField.delegate = self
         
@@ -56,7 +62,6 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         // Show the framed location
-        
         
         let locationCoordinate = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
         
@@ -125,7 +130,7 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
             }
     }
     
-    // AMRK: - Actions
+    // MARK: - Actions
     
     @IBAction func submitAction(sender: UIButton) {
         submitStudentLocation()
@@ -171,22 +176,12 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
                 self.showMessageWithTitle("Error submiting location", message: existingError.localizedDescription)
                 return
             }
-            
-            // Success. Save my student location
-
-            // FIXME: Remove this whe everything is working
-            // studentLocation.objectId = objectId
-            // StudentLocationManager.sharedInstance.myStudentLocation = studentLocation
-            //
-            
-            // TODO: Add a refresh action here
-//            StudentInformationManager.sharedInstance.refreshRequired = true
+   
             self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
     
     func validMediaString() -> (title: String, message: String)? {
-        
         // Validate that the link provided exists and is a URL
         if let mediaString = linkToShareTextField.text {
             if !mediaString.isEmpty && mediaString != DefaultShareLinkText {
