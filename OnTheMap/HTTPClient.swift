@@ -9,10 +9,11 @@
 import Foundation
 
 class HTTPClient: NSObject {
-var session: NSURLSession
+    var session: NSURLSession
     
     override init() {
         session = NSURLSession.sharedSession()
+        session.configuration.timeoutIntervalForRequest = 2
         super.init()
     }
     

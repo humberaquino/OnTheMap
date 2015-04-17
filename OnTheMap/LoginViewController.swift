@@ -110,7 +110,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         } else {
             // Success. Show the Map view
             StudentInformationManager.sharedInstance.udacityUser = udacityUser
-            StudentInformationManager.sharedInstance.refreshRequired = true
+            // TODO: Add a refresh action here
+//            StudentInformationManager.sharedInstance.refreshRequired = true
             self.presentMapAndTabView()
             
         }
@@ -234,6 +235,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         udacityClient.authToUdacityUsingFacebook(token, completitionHandler: { (udacityUser, error) -> Void in
             if let errorTuple = error {
                 self.showMessageWithTitle(errorTuple.title, message: errorTuple.message)
+                
+                if FBSDKAccessToken.currentAccessToken() != nil {
+                    let loginManager = FBSDKLoginManager()
+                    loginManager.logOut()
+                }
+                
                 self.loginInProgress(false)
                 return
             }

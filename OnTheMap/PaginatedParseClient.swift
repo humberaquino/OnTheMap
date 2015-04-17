@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+// It needs a cancel method
 class PaginatedParseClient: NSObject {
     
     let limit = Constants.BatchRequestSize
@@ -43,12 +45,14 @@ class PaginatedParseClient: NSObject {
         // Setup
         currentFetchComplete = nil
         timer = nil
+        requestRunning = false
         resultList = [StudentInformation]()
         
         // Get the total count
         parseClient.countStudentsInformation { (count, error) -> Void in
             self.performOnMainQueue({ () -> Void in
                 if error != nil {
+                    self.paginationRunning = false
                     // Error after trying to count
                     fetchComplete(result: nil, error: error)
                     return
@@ -60,13 +64,9 @@ class PaginatedParseClient: NSObject {
                 self.currentFetchComplete = fetchComplete
                 
                 self.timer = NSTimer.scheduledTimerWithTimeInterval(Constants.TimerIntervalRequests, target: self, selector: "nextRequest:", userInfo: nil, repeats: true)
+                 // Now the control is passed to the "nextRequest" method
             })
-            
-
-            // Now the control is passed to the "nextRequest" method
-            
         }
-        
         return true
     }
     

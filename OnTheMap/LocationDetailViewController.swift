@@ -179,7 +179,8 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
             // StudentLocationManager.sharedInstance.myStudentLocation = studentLocation
             //
             
-            StudentInformationManager.sharedInstance.refreshRequired = true
+            // TODO: Add a refresh action here
+//            StudentInformationManager.sharedInstance.refreshRequired = true
             self.dismissViewControllerAnimated(true, completion: nil)
         })
     }

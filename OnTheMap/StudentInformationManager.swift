@@ -9,9 +9,18 @@
 import Foundation
 import CoreLocation
 
-@objc protocol StudentInformationManagerDelegate {
-    func studentsInformationDidFetch()
-    func studentsInformationFetchError(error: NSError)
+//@objc protocol StudentInformationManagerDelegate {
+//    func studentsInformationDidFetch()
+//    func studentsInformationFetchError(error: NSError)
+//}
+
+
+struct StudentInformationManagerState {
+    static let New = "new"
+    static let Fetching = "fetching"
+    static let Ready = "ready"
+    static let ReadyWithCountries = "readyWithContries"
+    static let Error = "error"
 }
 
 class StudentInformationManager: NSObject {
@@ -20,15 +29,23 @@ class StudentInformationManager: NSObject {
     private let paginatedParseClient: PaginatedParseClient
     
     private var studentsInformation: [StudentInformation]!
+    private var countriesList: [CountryInformation]!
     
-    var delegate: StudentInformationManagerDelegate?
-    var refreshRequired = false
+    dynamic var state: String = StudentInformationManagerState.New
+    static let observableState = "state"
+    
     
     var currentStudentsInformation: [StudentInformation]? {
         return studentsInformation
     }
     
+    var currentCountriesList: [CountryInformation]? {
+        return countriesList
+    }
+    
     var countryInformationMap: [String: Int?]!
+    
+    var currentError: NSError!
     
     var udacityUser: UdacityUser?
     var myStudentInformation: StudentInformation?
@@ -39,47 +56,49 @@ class StudentInformationManager: NSObject {
         super.init()
     }
     
+    func resetState() {
+        studentsInformation = nil
+        countriesList = nil
+        currentError = nil
+        udacityUser = nil
+        myStudentInformation = nil
+        countryInformationMap = nil
+        self.state = StudentInformationManagerState.New
+    }
+    
     func refreshStudentsInformation() {
-//        parseClient.fetchStudentsInformation { (newStudentsInformationList, error) -> Void in
-//            if let existingError = error {
-//                // Error while fetching
-//                self.performOnMainQueue {
-//                    self.delegate?.studentsInformationFetchError(existingError)
-//                }
-//                return
-//            }
-//            
-//            // Update the current list
-//            self.studentsInformation = newStudentsInformationList!
-//            
-//            // Check if my location is already posted
-//            self.initMyStudentInformationIfNecessary()
-//            
-//            // Notify about the success
-//            self.performOnMainQueue {
-//                self.delegate?.studentsInformationDidFetch()
-//            }
-//        }
+        
+        self.currentError = nil
+        self.state = StudentInformationManagerState.Fetching
+        
         paginatedParseClient.fetchStudentInformationPaginated { (result, error) -> Void in
             if error != nil {
-                self.delegate?.studentsInformationFetchError(error!)
+                self.currentError = error
+                self.state = StudentInformationManagerState.Error
+//                self.delegate?.studentsInformationFetchError(error!)
                 return
             }
             // Update the current list
-            self.studentsInformation = result
+            self.studentsInformation = result!
             
             // Check if my location is already posted
             self.initMyStudentInformationIfNecessary()
             
             // Notify about the success
-          
-            self.delegate?.studentsInformationDidFetch()
-          
+//            self.delegate?.studentsInformationDidFetch()
+            self.state = StudentInformationManagerState.Ready
+            
+            self.refreshCountryInformationMap { (results, error) -> Void in
+                if error != nil {
+                    self.currentError = error
+                    self.state = StudentInformationManagerState.Error
+                    return
+                }
+                self.countriesList = results!
+                self.state = StudentInformationManagerState.ReadyWithCountries
+            }
+            
         }
-        
-        
-        
-        
     }
     
     // Search for a student location with my uniqueKey. If exist then sets myStudentLocation to it
@@ -92,7 +111,7 @@ class StudentInformationManager: NSObject {
     func refreshCountryInformationMap(completionHandler: (results:[CountryInformation]!, error: NSError!) -> Void) {
         countryInformationMap = [String: Int?]()
         
-        if  studentsInformation == nil ||  studentsInformation.count == 0 {
+        if  studentsInformation.count == 0 {
             completionHandler(results:[CountryInformation]() , error: nil)
             return
         }
@@ -107,7 +126,6 @@ class StudentInformationManager: NSObject {
                     completionHandler(results:nil, error: error)
                     return
                 }
-                
                 
                 let placemark = placemarks.last as! CLPlacemark
                 
@@ -174,15 +192,32 @@ class StudentInformationManager: NSObject {
             completitionHandler(success: true, error: nil)
         }
     }
+//    
+//    // Refresh
+//    func refreshIfNew() {
+//        // FIXME: Do hte refresh only if is not running
+//        
+//        //        if refreshRequired {
+//        //            refreshRequired = false
+//        //            if beforeRefresh != nil {
+//        //                beforeRefresh!()
+//        //            }
+//        if state == StudentInformationManagerState.New {
+//            refreshStudentsInformation()
+//        }
+//    }
     
-    // Used to refresh conditionally. Some part of the app can set refreshRequired to true and then
-    // This method can be called when the screen will appear to start a refresh
-    func refreshIfRequired(beforeRefresh: (() -> Void)?) {
-        if refreshRequired {
-            refreshRequired = false
-            if beforeRefresh != nil {
-                beforeRefresh!()
-            }            
+    func refreshIfPossible() {
+        // FIXME: Do hte refresh only if is not running
+        
+//        if refreshRequired {
+//            refreshRequired = false
+//            if beforeRefresh != nil {
+//                beforeRefresh!()
+//            }  
+        
+        // Only fetch if New, ReadyWithCountries or Error
+        if state == StudentInformationManagerState.New || state == StudentInformationManagerState.ReadyWithCountries || state == StudentInformationManagerState.Error {
             refreshStudentsInformation()
         }
     }

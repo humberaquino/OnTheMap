@@ -10,11 +10,13 @@ import Foundation
 import UIKit
 import MapKit
 
-class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentInformationManagerDelegate {
+class StudentsMapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    @IBOutlet weak var placePinButton: UIBarButtonItem!
     
     let StudentPinIdentifier = "StudentPin"
     let DefineStudentInformationIdentifier = "DefineStudentInformation"
@@ -22,37 +24,80 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentInf
     let ConfirmationOverrideLocationMessage = "You have already posted a student location. Would you like to override your current Location?"
     
     var studentInformationManager: StudentInformationManager!
+    var currentStudentsInformation: [StudentInformation]!
+    
+    
+    private var myContext: UnsafeMutablePointer<Void> = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         mapView.delegate = self
-        
         studentInformationManager = StudentInformationManager.sharedInstance
+        
+       
     }
+  
     
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        studentInformationManager.delegate = self
+        super.viewWillAppear(animated)                
         
-        studentInformationManager.refreshIfRequired({
-            self.refreshInProgress()
-        })
+        // Update to the current list
+        currentStudentsInformation = studentInformationManager.currentStudentsInformation
+        if currentStudentsInformation == nil {
+            // Uninitialized
+            refreshInProgress()
+            studentInformationManager.refreshIfPossible()
+        } else {
+            // Update control state
+            if studentInformationManager.state == StudentInformationManagerState.Fetching {
+                refreshInProgress()
+            } else {
+                reloadMap()
+                refreshDone()
+            }
+        }
+        
+        studentInformationManager.addObserver(self, forKeyPath: StudentInformationManager.observableState, options: NSKeyValueObservingOptions.New, context: &myContext)
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        studentInformationManager.delegate = nil
+        studentInformationManager.removeObserver(self, forKeyPath: StudentInformationManager.observableState)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+        if context == &myContext {
+            let newState = change[NSKeyValueChangeNewKey] as! String
+            
+            if newState == StudentInformationManagerState.Ready {
+                // Success: Get the data and reload the map
+                currentStudentsInformation = studentInformationManager.currentStudentsInformation
+                refreshDone()
+                reloadMap()
+            } else if newState == StudentInformationManagerState.Fetching {
+                // Mark as in progress
+                refreshInProgress()
+            } else if newState == StudentInformationManagerState.Error {
+                // Error in the fetching
+                refreshDone()
+                showMessageWithTitle("Error while updating the map", message: studentInformationManager.currentError.localizedDescription)
+            }
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
     }
     
     func refreshInProgress() {
         refreshButton.enabled = false
+        placePinButton.enabled = false
 //        view.userInteractionEnabled = false
         self.activityIndicator.startAnimating()
     }
     
     func refreshDone() {
         refreshButton.enabled = true
+        placePinButton.enabled = true
 //        view.userInteractionEnabled = true
         // Always set the alpha to Constants.UI.activeViewAlpha
 //        view.alpha = Constants.UI.activeViewAlpha
@@ -67,25 +112,12 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentInf
             self.mapView.removeAnnotations(self.mapView.annotations)
         }
         
-        println("Adding: \(studentInformationManager.currentStudentsInformation!.count)")
-        for studentInformation in studentInformationManager.currentStudentsInformation! {
+        println("Adding: \(currentStudentsInformation!.count)")
+        for studentInformation in currentStudentsInformation! {
             addStudentToMapView(studentInformation)
         }
 
-    }
-    
-    // MARK: - StudentLocationManagerDelegate
-    
-    func studentsInformationDidFetch() {
-        reloadMap()
-        refreshDone()
-    }
-    
-    func studentsInformationFetchError(error: NSError) {
-        showMessageWithTitle("Error while updating the map", message: error.localizedDescription)
-        refreshDone()
-    }
-    
+    }       
 
     // MARK: MKMapViewDelegate
     
@@ -132,9 +164,8 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate, StudentInf
     }
     
     @IBAction func reloadStudentInformationOnMap(sender: AnyObject) {
-        refreshInProgress()
-        
-        studentInformationManager.refreshStudentsInformation()
+        refreshInProgress()        
+        studentInformationManager.refreshIfPossible()
     }
     
     // MARK: - Map Utilities
