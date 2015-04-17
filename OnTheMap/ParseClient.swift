@@ -10,6 +10,11 @@ import Foundation
 
 class ParseClient: NSObject {
 
+    let parseBaseHeaders = [
+        "X-Parse-Application-Id": Constants.ParseApplicationId,
+        "X-Parse-REST-API-Key": Constants.ParseRestAPIKey
+    ]
+    
     let httpClient: HTTPClient
     
     var userID : String? = nil
@@ -19,17 +24,73 @@ class ParseClient: NSObject {
         super.init()
     }
     
+    
+    func fetchStudentsInformationPaginated(skip: Int, limit: Int, fetchComplete: (result: [StudentInformation]?, error: NSError?) -> Void) {
+        
+        let parameters = [
+            "limit" : limit,
+            "skip": skip
+        ]
+        
+        httpClient.jsonTaskForGETMethod(Constants.BaseURLSecure, method: Methods.StudentLocation ,
+            parameters: parameters, headers: parseBaseHeaders, taskCompleteHandler: { (jsonResponse, response, taskError) in
+                if let existingError = taskError {
+                    // Error during the GET request/response
+                    fetchComplete(result: nil, error: existingError)
+                    return
+                }
+                
+                // Asume a "results" array in the JSON response
+                let resultsArray = jsonResponse["results"] as! NSArray
+                
+                // Build StudentLocation array based on the JSON response
+                var buildError: NSError? = nil
+                var studentLocations:[StudentInformation]? = StudentInformation.buildStudentInformationList(resultsArray, error: &buildError)
+                
+                if let existingError = buildError {
+                    // Error while building the array og StudentLocations. Check the JSON Response and buildStudentLocationList method
+                    fetchComplete(result: nil, error: existingError)
+                    return
+                }
+                
+                // Success
+                fetchComplete(result: studentLocations, error: nil)
+        })
+        
+    }
+    
+    
+    func countStudentsInformation(fetchComplete: (count: Int!, error: NSError!) -> Void) {
+
+        let parameters = [
+            "limit" : 0,
+            "count": 1
+        ]
+        
+        httpClient.jsonTaskForGETMethod(Constants.BaseURLSecure, method: Methods.StudentLocation ,
+            parameters: parameters, headers: parseBaseHeaders, taskCompleteHandler: { (jsonResponse, response, taskError) in
+                if let existingError = taskError {
+                    // Error during the GET request/response
+                    fetchComplete(count: nil, error: existingError)
+                    return
+                }
+                
+                // Asume count is a Integer
+                let count = jsonResponse["count"] as! Int
+                
+                // Success
+                fetchComplete(count: count, error: nil)
+        })
+
+    }
+    
+    // FIXME: Deprecated
     func fetchStudentsInformation(fetchComplete: (result: [StudentInformation]?, error: NSError?) -> Void) {
         
         let parameters = [ "limit" : Constants.MaxStudentsInformation ]
         
-        let headers = [
-            "X-Parse-Application-Id": Constants.ParseApplicationId,
-            "X-Parse-REST-API-Key": Constants.ParseRestAPIKey
-        ]
-        
         httpClient.jsonTaskForGETMethod(Constants.BaseURLSecure, method: Methods.StudentLocation ,
-            parameters: parameters, headers: headers, taskCompleteHandler: { (jsonResponse, response, taskError) in
+            parameters: parameters, headers: parseBaseHeaders, taskCompleteHandler: { (jsonResponse, response, taskError) in
                 if let existingError = taskError {
                     // Error during the GET request/response
                     fetchComplete(result: nil, error: existingError)
@@ -56,15 +117,12 @@ class ParseClient: NSObject {
     
     
     func createStudentInformation(studentLocation: StudentInformation, completitionHandler: (objectId: String!, error: NSError!) -> Void) {
-        let headers = [
-            "X-Parse-Application-Id": Constants.ParseApplicationId,
-            "X-Parse-REST-API-Key": Constants.ParseRestAPIKey
-        ]
+       
         
         let jsonBody = studentLocation.toJSON()
         
         httpClient.jsonTaskForPOSTMethod(Constants.BaseURLSecure, method: Methods.StudentLocation,
-            parameters: nil, headers: headers, body: jsonBody) {
+            parameters: nil, headers: parseBaseHeaders, body: jsonBody) {
                 (jsonResponse, response, error) -> Void in
                 if let existingError = error {
                     completitionHandler(objectId: nil, error: existingError)
@@ -92,16 +150,13 @@ class ParseClient: NSObject {
     }
     
     func updateStudentInformation(studentInformation: StudentInformation, completitionHandler: (success: Bool, error: NSError!) -> Void) {
-        let headers = [
-            "X-Parse-Application-Id": Constants.ParseApplicationId,
-            "X-Parse-REST-API-Key": Constants.ParseRestAPIKey
-        ]
+        
         
         let jsonBody = studentInformation.toJSON()
         
         let method = "\(Methods.StudentLocation)/\(studentInformation.objectId!)"
         
-        httpClient.jsonTaskForPUTMethod(Constants.BaseURLSecure, method: method, parameters: nil, headers: headers, body: jsonBody) {
+        httpClient.jsonTaskForPUTMethod(Constants.BaseURLSecure, method: method, parameters: nil, headers: parseBaseHeaders, body: jsonBody) {
                 (jsonResponse, response, error) -> Void in
                 if let existingError = error {
                     completitionHandler(success: false, error: existingError)

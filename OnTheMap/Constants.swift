@@ -13,6 +13,9 @@ struct Constants {
     
     static let signUpURLString: String = "https://www.udacity.com/account/auth#!/signin"
     
+    static let TimerIntervalRequests: NSTimeInterval = 0.5
+    static let BatchRequestSize = 100 // try with 10
+    
     struct UI {
         static let inactiveViewAlpha: CGFloat = 0.8
         static let activeViewAlpha: CGFloat = 1.0

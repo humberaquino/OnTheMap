@@ -17,6 +17,8 @@ import CoreLocation
 class StudentInformationManager: NSObject {
     
     private let parseClient = ParseClient()
+    private let paginatedParseClient: PaginatedParseClient
+    
     private var studentsInformation: [StudentInformation]!
     
     var delegate: StudentInformationManagerDelegate?
@@ -31,27 +33,53 @@ class StudentInformationManager: NSObject {
     var udacityUser: UdacityUser?
     var myStudentInformation: StudentInformation?
     
+    
+    override init() {
+        self.paginatedParseClient = PaginatedParseClient(parseClient: self.parseClient)
+        super.init()
+    }
+    
     func refreshStudentsInformation() {
-        parseClient.fetchStudentsInformation { (newStudentsInformationList, error) -> Void in
-            if let existingError = error {
-                // Error while fetching
-                self.performOnMainQueue {
-                    self.delegate?.studentsInformationFetchError(existingError)
-                }
+//        parseClient.fetchStudentsInformation { (newStudentsInformationList, error) -> Void in
+//            if let existingError = error {
+//                // Error while fetching
+//                self.performOnMainQueue {
+//                    self.delegate?.studentsInformationFetchError(existingError)
+//                }
+//                return
+//            }
+//            
+//            // Update the current list
+//            self.studentsInformation = newStudentsInformationList!
+//            
+//            // Check if my location is already posted
+//            self.initMyStudentInformationIfNecessary()
+//            
+//            // Notify about the success
+//            self.performOnMainQueue {
+//                self.delegate?.studentsInformationDidFetch()
+//            }
+//        }
+        paginatedParseClient.fetchStudentInformationPaginated { (result, error) -> Void in
+            if error != nil {
+                self.delegate?.studentsInformationFetchError(error!)
                 return
             }
-            
             // Update the current list
-            self.studentsInformation = newStudentsInformationList!
+            self.studentsInformation = result
             
             // Check if my location is already posted
             self.initMyStudentInformationIfNecessary()
             
             // Notify about the success
-            self.performOnMainQueue {
-                self.delegate?.studentsInformationDidFetch()
-            }
+          
+            self.delegate?.studentsInformationDidFetch()
+          
         }
+        
+        
+        
+        
     }
     
     // Search for a student location with my uniqueKey. If exist then sets myStudentLocation to it

@@ -40,6 +40,7 @@
 		57DD0FF81ADC08CF00AC100C /* StudentInformationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD0FF71ADC08CF00AC100C /* StudentInformationManager.swift */; };
 		57DD0FFC1ADC1DB500AC100C /* StudentsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD0FFB1ADC1DB500AC100C /* StudentsListViewController.swift */; };
 		57DD10011ADC765C00AC100C /* UdacityUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DD10001ADC765C00AC100C /* UdacityUser.swift */; };
+		57E8B94B1AE073500039D1FB /* PaginatedParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8B94A1AE073500039D1FB /* PaginatedParseClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		57DD0FF71ADC08CF00AC100C /* StudentInformationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformationManager.swift; sourceTree = "<group>"; };
 		57DD0FFB1ADC1DB500AC100C /* StudentsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentsListViewController.swift; sourceTree = "<group>"; };
 		57DD10001ADC765C00AC100C /* UdacityUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityUser.swift; sourceTree = "<group>"; };
+		57E8B94A1AE073500039D1FB /* PaginatedParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaginatedParseClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				57DD0FF21AD9E20700AC100C /* ParseClient.swift */,
+				57E8B94A1AE073500039D1FB /* PaginatedParseClient.swift */,
 			);
 			name = Parse;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				578F776B1ADF34F200B7A512 /* ShareLinkWebPreviewViewController.swift in Sources */,
 				578F77661ADF191E00B7A512 /* CountryListViewController.swift in Sources */,
 				57DD0FE91AD9CB6300AC100C /* StudentsMapViewController.swift in Sources */,
+				57E8B94B1AE073500039D1FB /* PaginatedParseClient.swift in Sources */,
 				57DD0FED1AD9D7E400AC100C /* StudentInformation.swift in Sources */,
 				57DD0FEF1AD9DF3800AC100C /* HTTPClient.swift in Sources */,
 				57DD0FE71AD9B73800AC100C /* LocationDetailViewController.swift in Sources */,
