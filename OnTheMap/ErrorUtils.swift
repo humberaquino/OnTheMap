@@ -21,6 +21,11 @@ class ErrorUtils {
         return  NSError(domain: ErrorDomains.ServerError, code: ServerErrorCodes.SkipDataError, userInfo: userInfo)
     }
     
+    class func errorLoginFailureWith(message: String) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey : message]
+        return  NSError(domain: ErrorDomains.ClientError, code: ClientErrorCodes.InvalidCredentials, userInfo: userInfo)
+    }
+    
     class func errorUnexpectedWith(message: String) -> NSError {
         let userInfo = [NSLocalizedDescriptionKey : message]
         return  NSError(domain: ErrorDomains.ServerError, code: ServerErrorCodes.UnexpectedError, userInfo: userInfo)

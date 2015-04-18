@@ -58,4 +58,9 @@ extension UdacityClient {
         static let Error = "error"
     }
     
+    struct ResponseCodes {
+        static let OK = 200
+        static let AuthFailure = 403
+    }
+    
 }

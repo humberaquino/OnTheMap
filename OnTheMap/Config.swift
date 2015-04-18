@@ -23,7 +23,7 @@ struct Config {
         static let TimerIntervalRequests: NSTimeInterval = 0.5
         
         // Amount of seconds after a request timeouts
-        static let RequestTimeoutSeconds = 30
+        static let RequestTimeoutSeconds: NSTimeInterval = 30
     }
     
 }

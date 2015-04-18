@@ -158,7 +158,7 @@ class UdacityClient : NSObject {
             let httpResponse = response as! NSHTTPURLResponse
             let statusCode = httpResponse.statusCode
             
-            if statusCode == 200 {
+            if statusCode == ResponseCodes.OK {
                 // Success: Response OK
                 var validationError: NSError? = nil
                 if let userID = self.parseUserId(jsonResponse, error: &validationError) {
@@ -170,6 +170,18 @@ class UdacityClient : NSObject {
                     // Error: Invalid JSON structure
                     self.performOnMainQueue {
                         loginCompleteHandler(userID: nil, error: validationError)
+                    }
+                }
+            } else if statusCode == ResponseCodes.AuthFailure {
+                if let errorResponse = self.buildLoginFailureFromJSONResponse(jsonResponse) {
+                    self.performOnMainQueue {
+                        loginCompleteHandler(userID: nil, error: errorResponse)
+                    }
+                } else {
+                    // Could not parse JSON response
+                    self.performOnMainQueue {
+                        let unexpectedError = ErrorUtils.errorUnexpectedWith("Could not parse error JSON response. Status code:\(statusCode)")
+                        loginCompleteHandler(userID: nil, error: unexpectedError)
                     }
                 }
             } else {
@@ -245,6 +257,14 @@ class UdacityClient : NSObject {
     func buildErrorFromJSONResponse(json: NSDictionary) -> NSError? {
         if let errorMsg =  json[UdacityClient.JSONResponseKeys.Error] as? String {
             return ErrorUtils.errorUnexpectedWith(errorMsg)
+        } else {
+            return nil
+        }
+    }
+    
+    func buildLoginFailureFromJSONResponse(json: NSDictionary) -> NSError? {
+        if let errorMsg =  json[UdacityClient.JSONResponseKeys.Error] as? String {
+            return ErrorUtils.errorLoginFailureWith(errorMsg)
         } else {
             return nil
         }

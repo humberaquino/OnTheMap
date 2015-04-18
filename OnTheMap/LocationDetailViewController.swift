@@ -27,6 +27,7 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
 
     // Current coordinates
     var coordinates: CLLocationCoordinate2D!
+    var annotation: MKPointAnnotation!
     
     // Map string to use
     var mapString: String!
@@ -68,13 +69,10 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegion(center: locationCoordinate, span: span)
         
-        var annotation = MKPointAnnotation()
+        self.annotation = MKPointAnnotation()
         annotation.coordinate = locationCoordinate
-        
         mapView.addAnnotation(annotation)
-        
         mapView.setRegion(region, animated: true)
-        
     }
     
     // MARK: - UITapGestureRecognizer
@@ -126,7 +124,7 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
             if newState == MKAnnotationViewDragState.Ending {
                 let droppedAt = view.annotation.coordinate
                 // Update coordinates
-                coordinates = droppedAt
+                annotation.coordinate = droppedAt
             }
     }
     
@@ -176,7 +174,9 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
                 self.showMessageWithTitle("Error submiting location", message: existingError.localizedDescription)
                 return
             }
-   
+            
+            self.studentInformationManager.refreshIfPossible()
+            
             self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
@@ -206,8 +206,8 @@ class LocationDetailViewController: UIViewController, MKMapViewDelegate, UITextF
         let udacityUser = StudentInformationManager.sharedInstance.udacityUser!
         
         let mediaString = linkToShareTextField.text
-        let latitude = coordinates.latitude
-        let longitude = coordinates.longitude
+        let latitude = annotation.coordinate.latitude
+        let longitude = annotation.coordinate.longitude
         
         let dictionary: [String: AnyObject] = [
             "uniqueKey": udacityUser.userID,

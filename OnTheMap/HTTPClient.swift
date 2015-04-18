@@ -16,7 +16,7 @@ class HTTPClient: NSObject {
     override init() {
         session = NSURLSession.sharedSession()
         // Override the timeout
-        session.configuration.timeoutIntervalForRequest = Config.Network.TimerIntervalRequests
+        session.configuration.timeoutIntervalForRequest = Config.Network.RequestTimeoutSeconds
         super.init()
     }
     

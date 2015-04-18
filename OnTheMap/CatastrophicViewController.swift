@@ -26,9 +26,6 @@ class CatastrophicViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        topLabel.text = message.top
-        bottomLabel.text = message.bottom
-        
         // Initialization
         tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
     }
@@ -36,6 +33,9 @@ class CatastrophicViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         addKeyboardDismissRecognizer()
+        
+        topLabel.text = message.top
+        bottomLabel.text = message.bottom
     }
     
     override func viewWillDisappear(animated: Bool) {
